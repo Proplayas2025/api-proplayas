@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: proplayas-api
+    ports:
+      - "8080:8000"
+    environment:
+      - DATABASE_URL=postgresql://proplayas:proplayas@postgres:5432/proplayas_db
+    volumes:
+      - ./storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - proplayas-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: proplayas-postgres
+    environment:
+      - POSTGRES_USER=proplayas
+      - POSTGRES_PASSWORD=proplayas
+      - POSTGRES_DB=proplayas_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U proplayas"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - proplayas-network
+
+volumes:
+  postgres_data:
+
+networks:
+  proplayas-network:
+    driver: bridge
