@@ -37,5 +37,5 @@ class User(Base):
     
     node = relationship("Node", foreign_keys=[node_id], back_populates="members")
     led_node = relationship("Node", foreign_keys="Node.leader_id", back_populates="leader", uselist=False)
-    social_links = relationship("SocialLink", back_populates="user", cascade="all, delete-orphan")
+    social_media = relationship("SocialLink", back_populates="user", cascade="all, delete-orphan")
     created_content = relationship("Content", back_populates="author", cascade="all, delete-orphan")

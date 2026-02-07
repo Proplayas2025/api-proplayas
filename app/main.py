@@ -2,7 +2,9 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
+from pathlib import Path
 import os
 from core.config import settings
 from routes.auth import router as auth_router
@@ -13,6 +15,10 @@ from routes.invitations import router as invitations_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Crear directorios de storage al iniciar
+    storage_dirs = ["profiles", "covers", "docs"]
+    for d in storage_dirs:
+        Path(settings.UPLOAD_DIR, d).mkdir(parents=True, exist_ok=True)
     yield
 
 docs_url = f"{settings.API_V1_STR}/docs" if settings.API_V1_STR else "/docs"
@@ -60,6 +66,10 @@ app.include_router(users_router, prefix=settings.API_V1_STR)
 app.include_router(nodes_router, prefix=settings.API_V1_STR)
 app.include_router(content_router, prefix=settings.API_V1_STR)
 app.include_router(invitations_router, prefix=settings.API_V1_STR)
+
+# Servir archivos estáticos (uploads: fotos de perfil, covers, docs)
+# Accesible en: http://localhost:8080/storage/uploads/profiles/filename.jpg
+app.mount("/storage", StaticFiles(directory="storage"), name="storage")
 
 @app.get("/")
 async def root():

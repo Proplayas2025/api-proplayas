@@ -1,7 +1,16 @@
 from pydantic import BaseModel
 from typing import Optional, List
-from schemas.user import UserListItem, SocialLink
+from schemas.user import UserListItem
 from models.node import NodeType, NodeStatus
+
+class NodeSocialLink(BaseModel):
+    """Schema para redes sociales de nodos (sin user_id)"""
+    id: int
+    platform: str
+    url: str
+    
+    class Config:
+        from_attributes = True
 
 class NodeBase(BaseModel):
     name: str
@@ -48,7 +57,7 @@ class NodeResponse(NodeBase):
     ip_address: Optional[str] = None
     members_count: int
     status: NodeStatus
-    social_media: List[SocialLink] = []
+    social_media: List[NodeSocialLink] = []
     leader: Optional[LeaderInfo] = None
     
     class Config:

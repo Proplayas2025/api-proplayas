@@ -59,7 +59,7 @@ async def get_current_user(
     return user
 
 async def get_current_admin(current_user: User = Depends(get_current_user)) -> User:
-    if current_user.role != "admin":
+    if current_user.role.value != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"
@@ -67,7 +67,7 @@ async def get_current_admin(current_user: User = Depends(get_current_user)) -> U
     return current_user
 
 async def get_current_node_leader(current_user: User = Depends(get_current_user)) -> User:
-    if current_user.role not in ["admin", "node_leader"]:
+    if current_user.role.value not in ["admin", "node_leader"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"

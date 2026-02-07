@@ -20,24 +20,23 @@ router = APIRouter(
 @router.get("", response_model=dict)
 async def get_nodes(
     page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
-    offset = (page - 1) * 10
+    offset = (page - 1) * per_page
     
-    nodes = db.query(Node).offset(offset).limit(10).all()
+    nodes = db.query(Node).offset(offset).limit(per_page).all()
     total = db.query(Node).count()
     
     return {
         "status": 200,
         "message": "Nodes retrieved successfully",
-        "data": {
-            "data": [NodeResponse.from_orm(node) for node in nodes],
-            "pagination": {
-                "current_page": page,
-                "per_page": 10,
-                "total": total,
-                "last_page": (total + 9) // 10
-            }
+        "data": [NodeResponse.from_orm(node) for node in nodes],
+        "meta": {
+            "current_page": page,
+            "per_page": per_page,
+            "total": total,
+            "last_page": (total + per_page - 1) // per_page
         }
     }
 
@@ -67,12 +66,33 @@ async def get_node_members(
     if not node:
         raise HTTPException(status_code=404, detail="Node not found")
     
-    members = db.query(User).filter(User.node_id == node.id).all()
+    # Join NodeMember con User para obtener datos completos
+    members_data = (
+        db.query(NodeMember, User)
+        .join(User, NodeMember.user_id == User.id)
+        .filter(NodeMember.node_id == node.id)
+        .all()
+    )
+    
+    result = []
+    for nm, user in members_data:
+        result.append({
+            "id": nm.id,
+            "user_id": user.id,
+            "node_id": nm.node_id,
+            "member_code": nm.member_code,
+            "name": user.name,
+            "email": user.email,
+            "username": user.username,
+            "research_line": nm.research_line,
+            "work_area": nm.work_area,
+            "status": user.status.value,
+        })
     
     return {
         "status": 200,
         "message": "Members retrieved successfully",
-        "data": [UserListItem.from_orm(member) for member in members]
+        "data": result
     }
 
 @router.post("", response_model=dict)
@@ -155,8 +175,8 @@ async def upload_node_profile_picture(
     with image_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    # Update node
-    node.profile_picture = str(image_path)
+    # Update node — save just filename
+    node.profile_picture = image_name
     db.commit()
     db.refresh(node)
     
@@ -196,8 +216,8 @@ async def upload_node_memorandum(
     with doc_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    # Update node memorandum field with file path
-    node.memorandum = str(doc_path)
+    # Update node memorandum field with just filename
+    node.memorandum = doc_name
     db.commit()
     db.refresh(node)
     
@@ -225,4 +245,97 @@ async def delete_node(
         "status": 200,
         "message": "Node deleted successfully",
         "data": {"id": node_id}
+    }
+
+
+# ──────────────────────────────────────────────
+# Member management (bajo /nodes/member/...)
+# ──────────────────────────────────────────────
+
+@router.put("/member/{member_id}", response_model=dict)
+async def toggle_member_status(
+    member_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Toggle status de un miembro (active/inactive). Admin o líder del nodo."""
+    member = db.query(User).filter(User.id == member_id).first()
+    
+    if not member:
+        raise HTTPException(status_code=404, detail="Member not found")
+    
+    # Verificar permisos: admin o líder del nodo del miembro
+    if current_user.role.value == "node_leader":
+        if member.node_id is None:
+            raise HTTPException(status_code=404, detail="Member not assigned to any node")
+        node = db.query(Node).filter(Node.id == member.node_id).first()
+        if not node or node.leader_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Not enough permissions")
+    elif current_user.role.value != "admin":
+        raise HTTPException(status_code=403, detail="Not enough permissions")
+    
+    # Toggle status
+    if member.status == UserStatus.active:
+        member.status = UserStatus.inactive
+    else:
+        member.status = UserStatus.active
+    
+    db.commit()
+    db.refresh(member)
+    
+    return {
+        "status": 200,
+        "message": "Member status updated successfully",
+        "data": {
+            "id": member.id,
+            "name": member.name,
+            "email": member.email,
+            "status": member.status.value,
+        }
+    }
+
+
+@router.delete("/member/{member_id}", response_model=dict)
+async def remove_member_from_node(
+    member_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Remover miembro del nodo (no elimina el usuario, solo la relación)."""
+    member = db.query(User).filter(User.id == member_id).first()
+    
+    if not member:
+        raise HTTPException(status_code=404, detail="Member not found")
+    
+    if member.node_id is None:
+        raise HTTPException(status_code=400, detail="Member not assigned to any node")
+    
+    # Verificar permisos
+    if current_user.role.value == "node_leader":
+        node = db.query(Node).filter(Node.id == member.node_id).first()
+        if not node or node.leader_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Not enough permissions")
+    elif current_user.role.value != "admin":
+        raise HTTPException(status_code=403, detail="Not enough permissions")
+    
+    node_id = member.node_id
+    
+    # Eliminar registro NodeMember
+    db.query(NodeMember).filter(NodeMember.user_id == member.id, NodeMember.node_id == node_id).delete()
+    
+    # Desasignar usuario del nodo
+    member.node_id = None
+    member.status = UserStatus.inactive
+    
+    # Actualizar contador de miembros
+    node = db.query(Node).filter(Node.id == node_id).first()
+    if node:
+        node.members_count = db.query(User).filter(User.node_id == node_id).count()
+    
+    db.commit()
+    
+    return {
+        "status": 200,
+        "message": "Member removed from node successfully",
+        "data": {"id": member_id}
     }

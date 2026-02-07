@@ -4,12 +4,20 @@ from datetime import datetime
 from models.user import UserRole
 from models.invitation import InvitationStatus
 
-class InvitationCreate(BaseModel):
-    name: Optional[str] = None
+
+class InviteNodeLeaderCreate(BaseModel):
+    """Admin invita líder de nodo: nombre, email, tipo de nodo"""
+    name: str
     email: EmailStr
-    role: UserRole
-    node_id: Optional[int] = None
-    node_type: Optional[str] = None
+    node_type: str  # sociedad_civil, cientifico, empresarial, etc.
+    code: Optional[str] = None  # se genera automáticamente
+
+
+class InviteNodeMemberCreate(BaseModel):
+    """Líder de nodo invita miembro: nombre, email"""
+    name: str
+    email: EmailStr
+
 
 class InvitationResponse(BaseModel):
     id: int
@@ -26,5 +34,10 @@ class InvitationResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class InvitationValidate(BaseModel):
-    token: str
+
+class InvitationValidateResponse(BaseModel):
+    name: str
+    email: str
+    role_type: str
+    node_type: Optional[str] = None
+    node_id: Optional[int] = None

@@ -49,6 +49,40 @@ async def get_current_user_profile(
         "data": UserResponse.from_orm(current_user)
     }
 
+@router.put("/me", response_model=dict)
+async def update_current_user_profile(
+    user_update: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    for field, value in user_update.dict(exclude_unset=True).items():
+        setattr(current_user, field, value)
+    
+    db.commit()
+    db.refresh(current_user)
+    
+    return {
+        "status": 200,
+        "message": "Profile updated successfully",
+        "data": UserResponse.from_orm(current_user)
+    }
+
+@router.get("/profile/{username}", response_model=dict)
+async def get_public_profile(
+    username: str,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.username == username).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "status": 200,
+        "message": "User profile retrieved successfully",
+        "data": UserResponse.from_orm(user)
+    }
+
 @router.get("/{user_id}", response_model=dict)
 async def get_user(
     user_id: int,
@@ -73,7 +107,7 @@ async def update_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    if current_user.id != user_id and current_user.role != "admin":
+    if current_user.id != user_id and current_user.role.value != "admin":
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
     user = db.query(User).filter(User.id == user_id).first()
@@ -112,8 +146,8 @@ async def upload_user_profile_picture(
     with image_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    # Update user
-    current_user.profile_picture = str(image_path)
+    # Update user — save just filename for profile_picture
+    current_user.profile_picture = image_name
     db.commit()
     db.refresh(current_user)
     

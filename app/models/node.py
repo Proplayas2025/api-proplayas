@@ -4,11 +4,11 @@ from database import Base
 import enum
 
 class NodeType(str, enum.Enum):
-    comunidad = "comunidad"
-    universidad = "universidad"
-    organizacion = "organizacion"
-    empresa = "empresa"
-    institucion = "institucion"
+    sociedad_civil = "sociedad_civil"
+    cientifico = "cientifico"
+    empresarial = "empresarial"
+    funcion_publica = "funcion_publica"
+    individual = "individual"
 
 class NodeStatus(str, enum.Enum):
     active = "active"
@@ -21,7 +21,7 @@ class Node(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
     code = Column(String(50), unique=True, nullable=False, index=True)
-    type = Column(SQLEnum(NodeType), nullable=False, default=NodeType.comunidad)
+    type = Column(SQLEnum(NodeType), nullable=False, default=NodeType.sociedad_civil)
     profile_picture = Column(String(255), nullable=True)
     about = Column(Text, nullable=True)
     country = Column(String(100), nullable=True)
@@ -38,4 +38,4 @@ class Node(Base):
     
     leader = relationship("User", back_populates="led_node", foreign_keys=[leader_id])
     members = relationship("User", back_populates="node", foreign_keys="User.node_id")
-    social_links = relationship("NodeSocialLink", back_populates="node", cascade="all, delete-orphan")
+    social_media = relationship("NodeSocialLink", back_populates="node", cascade="all, delete-orphan")

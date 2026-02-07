@@ -1,0 +1,6 @@
+# Storage directory for uploaded files
+# This directory is mounted as a Docker volume
+# Structure:
+#   storage/uploads/profiles/  - User and node profile pictures
+#   storage/uploads/covers/    - Content cover images
+#   storage/uploads/docs/      - PDFs, memorandums, other documents

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum as SQLEnum
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum as SQLEnum, Text
 from datetime import datetime, timedelta
 from database import Base
 from models.user import UserRole
@@ -15,7 +15,7 @@ class Invitation(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=True)
     email = Column(String(255), nullable=False, index=True)
-    token = Column(String(255), unique=True, nullable=False, index=True)
+    token = Column(Text, unique=True, nullable=False, index=True)
     role = Column(SQLEnum(UserRole), nullable=False)
     node_type = Column(String(100), nullable=True)
     status = Column(SQLEnum(InvitationStatus), nullable=False, default=InvitationStatus.pending)

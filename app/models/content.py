@@ -74,7 +74,6 @@ class Content(Base):
     
     author = relationship("User", back_populates="created_content")
     chapters = relationship("Chapter", back_populates="series", cascade="all, delete-orphan")
-    chapters = relationship("Chapter", back_populates="series", cascade="all, delete-orphan")
 
 class Chapter(Base):
     __tablename__ = "chapters"

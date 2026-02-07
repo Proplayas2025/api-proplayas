@@ -127,7 +127,7 @@ async def toggle_content_status(
     if not content:
         raise HTTPException(status_code=404, detail="Content not found")
     
-    if content.author_id != current_user.id and current_user.role not in ["admin", "node_leader"]:
+    if content.author_id != current_user.id and current_user.role.value not in ["admin", "node_leader"]:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
     # Cycle through statuses: draft -> published -> archived -> draft
@@ -159,7 +159,7 @@ async def update_content(
     if not content:
         raise HTTPException(status_code=404, detail="Content not found")
     
-    if content.author_id != current_user.id and current_user.role not in ["admin", "node_leader"]:
+    if content.author_id != current_user.id and current_user.role.value not in ["admin", "node_leader"]:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
     for field, value in content_update.dict(exclude_unset=True).items():
@@ -186,7 +186,7 @@ async def upload_file(
     if not content:
         raise HTTPException(status_code=404, detail="Content not found")
     
-    if content.author_id != current_user.id and current_user.role not in ["admin", "node_leader"]:
+    if content.author_id != current_user.id and current_user.role.value not in ["admin", "node_leader"]:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
     # Create upload directory if it doesn't exist
@@ -202,9 +202,9 @@ async def upload_file(
     with file_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    # Update content
-    content.file_path = str(file_path)
-    content.file_url = f"{settings.FRONTEND_URL}/storage/uploads/docs/{file_name}"
+    # Update content — save just filename, frontend constructs full URL
+    content.file_path = file_name
+    content.file_url = file_name
     
     db.commit()
     db.refresh(content)
@@ -227,7 +227,7 @@ async def upload_cover_image(
     if not content:
         raise HTTPException(status_code=404, detail="Content not found")
     
-    if content.author_id != current_user.id and current_user.role not in ["admin", "node_leader"]:
+    if content.author_id != current_user.id and current_user.role.value not in ["admin", "node_leader"]:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
     # Create upload directory if it doesn't exist
@@ -243,9 +243,9 @@ async def upload_cover_image(
     with image_path.open("wb") as buffer:
         shutil.copyfileobj(image.file, buffer)
     
-    # Update content
-    content.cover_image = str(image_path)
-    content.cover_image_url = f"{settings.FRONTEND_URL}/storage/uploads/covers/{image_name}"
+    # Update content — save just filename
+    content.cover_image = image_name
+    content.cover_image_url = image_name
     
     db.commit()
     db.refresh(content)
@@ -267,7 +267,7 @@ async def delete_content(
     if not content:
         raise HTTPException(status_code=404, detail="Content not found")
     
-    if content.author_id != current_user.id and current_user.role != "admin":
+    if content.author_id != current_user.id and current_user.role.value != "admin":
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
     db.delete(content)

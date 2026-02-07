@@ -23,7 +23,7 @@ class SocialLink(Base):
     
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     
-    user = relationship("User", back_populates="social_links")
+    user = relationship("User", back_populates="social_media")
 
 class NodeSocialLink(Base):
     __tablename__ = "node_social_links"
@@ -34,4 +34,4 @@ class NodeSocialLink(Base):
     
     node_id = Column(Integer, ForeignKey("nodes.id"), nullable=False)
     
-    node = relationship("Node", back_populates="social_links")
+    node = relationship("Node", back_populates="social_media")

@@ -51,7 +51,7 @@ class UserResponse(UserBase):
     profile_picture: Optional[str] = None
     country: Optional[str] = None
     city: Optional[str] = None
-    social_links: List[SocialLink] = []
+    social_media: List[SocialLink] = []
     
     class Config:
         from_attributes = True
@@ -63,6 +63,7 @@ class UserListItem(BaseModel):
     role: UserRole
     status: UserStatus
     node_id: Optional[int] = None
+    node_code: Optional[str] = None
     
     class Config:
         from_attributes = True
