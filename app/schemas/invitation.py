@@ -23,6 +23,7 @@ class InvitationResponse(BaseModel):
     id: int
     name: Optional[str] = None
     email: EmailStr
+    token: str
     role: UserRole
     node_type: Optional[str] = None
     status: InvitationStatus

@@ -276,7 +276,18 @@ def _register_node_leader(db: Session, data: dict, payload: dict, password: str)
     node_code = payload.get("node_code") or generate_node_code(db, node_type)
 
     # Crear el usuario
-    username = data.get("email", "").split("@")[0]  # Default username from email
+    username = data.get("username") or data.get("email", "").split("@")[0]
+
+    # Verificar que el username no esté en uso
+    existing_username = db.query(User).filter(User.username == username).first()
+    if existing_username:
+        return {
+            "status":400,
+            "message":"El nombre de usuario '{username}' ya está en uso. Por favor elige otro.",
+            "data":[]
+        }
+        
+
     new_user = User(
         name=data.get("name", ""),
         username=username,
@@ -353,10 +364,20 @@ def _register_member(db: Session, data: dict, payload: dict, password: str) -> d
     # Generar código de miembro (A01-1, A01-2, etc.)
     member_code = generate_member_code(db, node.code)
 
+    # Verificar que el username no esté en uso
+    username = data.get("username") or data.get("email", "").split("@")[0]
+    existing_username = db.query(User).filter(User.username == username).first()
+    if existing_username:
+        raise HTTPException(
+            status_code=400,
+            detail = f"El nombre de usuario '{username}' ya está en uso. Por favor elige otro."
+        )
+        
+        
     # Crear usuario
     new_user = User(
         name=data.get("name", ""),
-        username=data.get("username", data.get("email", "").split("@")[0]),
+        username=username,
         email=data.get("email", ""),
         password=get_password_hash(password),
         role=UserRole.member,

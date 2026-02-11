@@ -8,13 +8,46 @@ from database import get_db
 from schemas.content import ContentResponse, ContentCreate, ContentUpdate
 from models import Content, User
 from models.content import ContentType, ContentStatus
-from core.security import get_current_user
+from core.security import get_current_user, get_current_admin
 from core.config import settings
+from core.image import save_optimized_image
 
 router = APIRouter(
     prefix="/content",
     tags=["content"]
 )
+
+
+@router.get("/all", response_model=dict)
+async def get_all_content(
+    content_type: Optional[ContentType] = None,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1, le=100),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin)
+):
+    """Admin only: returns ALL content regardless of author or status."""
+    query = db.query(Content)
+
+    if content_type:
+        query = query.filter(Content.content_type == content_type)
+
+    total = query.count()
+    offset = (page - 1) * per_page
+    content_list = query.order_by(Content.id.desc()).offset(offset).limit(per_page).all()
+
+    return {
+        "status": 200,
+        "message": "All content retrieved successfully",
+        "data": [ContentResponse.from_orm(c) for c in content_list],
+        "meta": {
+            "current_page": page,
+            "per_page": per_page,
+            "total": total,
+            "last_page": (total + per_page - 1) // per_page
+        }
+    }
+
 
 @router.get("", response_model=dict)
 async def get_content(
@@ -234,18 +267,15 @@ async def upload_cover_image(
     upload_dir = Path(settings.UPLOAD_DIR) / "covers"
     upload_dir.mkdir(parents=True, exist_ok=True)
     
-    # Generate unique filename
-    file_extension = image.filename.split(".")[-1] if "." in image.filename else "jpg"
-    image_name = f"content_{content_id}_cover.{file_extension}"
-    image_path = upload_dir / image_name
+    # Read image bytes and optimize to WebP
+    image_bytes = await image.read()
+    image_name = f"content_{content_id}_cover"
+    output_path = upload_dir / image_name
+    final_path = save_optimized_image(image_bytes, output_path)
     
-    # Save image
-    with image_path.open("wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
-    
-    # Update content — save just filename
-    content.cover_image = image_name
-    content.cover_image_url = image_name
+    # Update content — save just filename, frontend constructs full URL via baseUrl
+    content.cover_image = final_path.name
+    content.cover_image_url = None
     
     db.commit()
     db.refresh(content)

@@ -11,6 +11,7 @@ from models.node_member import NodeMember
 from models.user import UserStatus
 from core.security import get_current_user, get_current_admin, get_current_node_leader
 from core.config import settings
+from core.image import save_optimized_image
 
 router = APIRouter(
     prefix="/nodes",
@@ -20,7 +21,7 @@ router = APIRouter(
 @router.get("", response_model=dict)
 async def get_nodes(
     page: int = Query(1, ge=1),
-    per_page: int = Query(10, ge=1, le=100),
+    per_page: int = Query(50, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
     offset = (page - 1) * per_page
@@ -146,7 +147,7 @@ async def update_node(
 
 @router.post("/upload-profile-picture", response_model=dict)
 async def upload_node_profile_picture(
-    file: UploadFile = File(...),
+    image: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -154,7 +155,6 @@ async def upload_node_profile_picture(
     if current_user.role.value == "node_leader":
         node = db.query(Node).filter(Node.leader_id == current_user.id).first()
     elif current_user.role.value == "admin":
-        # Admin needs to specify which node (could be added as query param)
         node = db.query(Node).filter(Node.leader_id == current_user.id).first()
     else:
         raise HTTPException(status_code=403, detail="Not enough permissions")
@@ -166,17 +166,14 @@ async def upload_node_profile_picture(
     upload_dir = Path(settings.UPLOAD_DIR) / "profiles"
     upload_dir.mkdir(parents=True, exist_ok=True)
     
-    # Generate filename
-    file_extension = file.filename.split(".")[-1] if "." in file.filename else "jpg"
-    image_name = f"node_{node.id}_profile.{file_extension}"
-    image_path = upload_dir / image_name
-    
-    # Save file
-    with image_path.open("wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    # Read image bytes and optimize to WebP
+    image_bytes = await image.read()
+    image_name = f"node_{node.id}_profile"
+    output_path = upload_dir / image_name
+    final_path = save_optimized_image(image_bytes, output_path)
     
     # Update node — save just filename
-    node.profile_picture = image_name
+    node.profile_picture = final_path.name
     db.commit()
     db.refresh(node)
     

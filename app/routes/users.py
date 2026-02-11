@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List
 from pathlib import Path
-import shutil
 from database import get_db
 from schemas.user import UserResponse, UserListItem, UserUpdate
-from models import User
+from models import User, Node
 from core.security import get_current_user, get_current_admin
 from core.config import settings
+from core.image import save_optimized_image
 
 router = APIRouter(
     prefix="/users",
@@ -17,7 +17,7 @@ router = APIRouter(
 @router.get("", response_model=dict)
 async def get_users(
     page: int = Query(1, ge=1),
-    per_page: int = Query(10, ge=1, le=100),
+    per_page: int = Query(25, ge=1, le=100),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin)
 ):
@@ -26,10 +26,20 @@ async def get_users(
     users = db.query(User).offset(offset).limit(per_page).all()
     total = db.query(User).count()
     
+    # Enrich with node_code
+    result = []
+    for user in users:
+        item = UserListItem.from_orm(user)
+        if user.node_id:
+            node = db.query(Node).filter(Node.id == user.node_id).first()
+            if node:
+                item.node_code = node.code
+        result.append(item)
+    
     return {
         "status": 200,
         "message": "Users retrieved successfully",
-        "data": [UserListItem.from_orm(user) for user in users],
+        "data": result,
         "meta": {
             "current_page": page,
             "per_page": per_page,
@@ -127,9 +137,40 @@ async def update_user(
         "data": UserResponse.from_orm(user)
     }
 
+@router.put("/{user_id}/toggle-status", response_model=dict)
+async def toggle_user_status(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_admin)
+):
+    """Admin only: toggle user status between active/inactive."""
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.id == current_user.id:
+        raise HTTPException(status_code=400, detail="No puedes cambiar tu propio estado")
+
+    from models.user import UserStatus
+    if user.status == UserStatus.active:
+        user.status = UserStatus.inactive
+    else:
+        user.status = UserStatus.active
+
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "status": 200,
+        "message": "User status updated successfully",
+        "data": UserListItem.from_orm(user)
+    }
+
+
 @router.post("/upload-profile-picture", response_model=dict)
 async def upload_user_profile_picture(
-    file: UploadFile = File(...),
+    image: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -137,17 +178,14 @@ async def upload_user_profile_picture(
     upload_dir = Path(settings.UPLOAD_DIR) / "profiles"
     upload_dir.mkdir(parents=True, exist_ok=True)
     
-    # Generate filename
-    file_extension = file.filename.split(".")[-1] if "." in file.filename else "jpg"
-    image_name = f"user_{current_user.id}_profile.{file_extension}"
-    image_path = upload_dir / image_name
+    # Read image bytes and optimize to WebP
+    image_bytes = await image.read()
+    image_name = f"user_{current_user.id}_profile"
+    output_path = upload_dir / image_name
+    final_path = save_optimized_image(image_bytes, output_path)
     
-    # Save file
-    with image_path.open("wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    # Update user — save just filename for profile_picture
-    current_user.profile_picture = image_name
+    # Update user — save just filename
+    current_user.profile_picture = final_path.name
     db.commit()
     db.refresh(current_user)
     
