@@ -1,0 +1,86 @@
+type,code,name,email,username,password,role,degree,postgraduate,expertise_area,research_work,country,city
+sociedad_civil,A01,Sergio de Mattos,solmattos1968@gmail.com,,ProplayasA01!,node_leader,,,,,Brasil,Niterói
+sociedad_civil,A02,Gladys Pérez de la Fuente,gpfuente2@gmail.com,,ProplayasA02!,node_leader,Licenciatura en Microbiología,Maestría en Microbiología,"Evaluación, gestión y certiticación de Playas. Manejo integrado de la zona costera.","Evaluación, gestión y certificación de playas. Manejo Integrado de la Zona Costera.",México,Playa del Carmen
+sociedad_civil,A03,Rafael Peñaloza,soymanglar@gmail.com,,ProplayasA03!,node_leader,,,,,Venezuela,Maracaibo
+cientifico,C04,Lidia Silva,silvaiiguez.lidia@gmail.com,,ProplayasC04!,node_leader,,,,,México,Manzanillo
+cientifico,C05,Juan Carlos Valdelamar Villegas,jvaldelamarv@tecnocomfenalco.edu.co,,ProplayasC05!,node_leader,,,,,Colombia,Cartagena
+cientifico,C06,Gustavo Eugenio Echeverri Jaramillo,gustavo.echeverri@gmail.com,,ProplayasC06!,node_leader,Bacteriólogo,PhD Toxicología Ambiental,"Ecotoxicología microbiana, Biotecnología microbiana ambiental, Control de riesgo químico y microbiológico en aguas y arenas.",Calidad química y Microbiológica de aguas y arenas. Alternativa biotecnológica para su bioremediación.,Colombia,Cartagena
+empresarial,E07,Camilo M. Botero,playascol@gmail.com,,ProplayasE07!,node_leader,Ingeniería Ambiental,Doctor en Gestión del Agua y la Costa,"Certificación de playas, paisaje costero, residuos sólidos, ordenamiento de playas.",Gestión de Playas,Colombia,Santa Marta
+sociedad_civil,A09,Paul Geerders,paul@biomunicipios.org,,ProplayasA09!,node_leader,,,,,Colombia,Urabá
+cientifico,C10,Juan Pablo Lozoya,mci.sur@gmail.com,,ProplayasC10!,node_leader,,,,,Uruguay,Maldonado
+cientifico,C11,Eduard Ariza,ariza.eduard@gmail.com,,ProplayasC11!,node_leader,,,,,España,Barcelona
+cientifico,C12,Francisco Asensio,francisco.asensio@uca.es,,ProplayasC12!,node_leader,,,,,España,Cádiz
+sociedad_civil,A13,Roberto Cañamero,ecoplayasperu@gmail.com,,ProplayasA13!,node_leader,,,,,Perú,Lima
+cientifico,C14,Alfredo Cabrera,alfredojuan1956@gmail.com,,ProplayasC14!,node_leader,,,,,Cuba,Matanzas
+cientifico,C15,Carlos Alberto Zárate Yepes,cazarate@unal.edu.co,,ProplayasC15!,node_leader,,,,,Colombia,Medellín
+cientifico,C16,Marcus Polette,mpolette@univali.br,,ProplayasC16!,node_leader,,,,,Brasil,Itajaí
+cientifico,C17,Carolina Peña,cpena@becarios.ulpgc.es,,ProplayasC17!,node_leader,,,,,España,Canarias
+sociedad_civil,A18,Angel Herrera,direccion@parquemarino.org,,ProplayasA18!,node_leader,,,,,Costa Rica,Puntarenas
+cientifico,C19,Carlos Perreira da Silva,cpselenes@gmail.com,,ProplayasC19!,node_leader,Geografía,Geografía,"Capacidade de Carga de Praias, Gestão",Gestión de Playas,Portugal,Lisboa
+cientifico,C20,Gloria I. López,lopezgi.phd@gmail.com,,ProplayasC20!,node_leader,,,,,Colombia,Medellín
+cientifico,C21,Isabel Calvo,isabelcalvo_16@hotmail.com ,,ProplayasC21!,node_leader,,,,,Costa Rica,Nicoya
+cientifico,C22,Ana Faggi,afaggi2003@yahoo.com.ar,,ProplayasC22!,node_leader,,,,,Argentina,Buenos Aires
+cientifico,C23,Nubia Mireya Garzón Barrero,nubiagarzonbarrero@gmail.com,,ProplayasC23!,node_leader,Ingeniería Ambiental y Sanitaria,Doctorado en Ciencias,"Rigidización costera, gestión de residuos, SbN, gestión del riesgo,","Certificación de playas, gestión del riesgo, salud ambiental, rigidización costera, economia circular.",Colombia,Montería
+cientifico,C24,Omar Darío Cervantes Rosas,homaruss@gmail.com,,ProplayasC24!,node_leader,Oceanólogo,Doctorado,Calidad del agua; Gestión costera.,Gestión de Playas,México,"Manzanillo, Colima"
+cientifico,C25,Maritza Barreto,redplayasprcaribe@gmail.com,,ProplayasC25!,node_leader,,,,,Puerto Rico,San Juan
+cientifico,C26,Gerson Fernandinho,gerson.fernandino@ufrgs.br,,ProplayasC26!,node_leader,,,,,Brasil,Porto Alegre
+empresarial,E27,Edelkis Rodríguez Moya,edelkisrm1971@gmail.com,,ProplayasE27!,node_leader,,,,,Cuba,Sagua Cuba
+cientifico,C28,Julio Luis del Río,julioluisdelrio@gmail.com,,ProplayasC28!,node_leader,,,,,Argentina,Mar del Plata
+cientifico,C29,Elin Márquez,emarquez@uniguajira.edu.co,,ProplayasC29!,node_leader,,,,,Colombia,Riohacha
+sociedad_civil,A30,Marta Moctezuma,caboscoastkeeper1@gmail.com,,ProplayasA30!,node_leader,,,,,México,Los Cabos
+cientifico,C31,Alfredo Jaramillo,alfredo.jaramillov@udea.edu.co,,ProplayasC31!,node_leader,,,,,Colombia,Turbo
+sociedad_civil,A32,Camila Longarete,soupraia@gmail.com,,ProplayasA32!,node_leader,,,,,Brasil,Florianópolis
+cientifico,C33,Flavia Lins,flaviamlb@gmail.com,,ProplayasC33!,node_leader,,,,,Brasil,Rio de Janeiro
+cientifico,C34,José Rodrigues de Souza Filho,jrsouzageografia@gmail.com,,ProplayasC34!,node_leader,Geógrafo,"Doutor em Geologia Marinha, Costeira e Sedimentar","Gestão costeira integrada, resíduos sólidos em ambiente marinho, certificação e qualidade recreacional de praias.",Gestión de Playas,Brasil,Salvador de Bahía
+cientifico,C35,Carolina Martinez,camartinezr@uc.cl ,,ProplayasC35!,node_leader,,,,,Chile,Santiago
+cientifico,C36,Humberto Garces,hgarcesb@gmail.com,,ProplayasC36!,node_leader,,,,,Panamá,Panamá
+empresarial,E37,Serafi Mercade,info@delatorreconsulting.com,,ProplayasE37!,node_leader,,,,,España,Torredembarra
+cientifico,C38,Jimmy Cevallos,jimmycev@hotmail.com,,ProplayasC38!,node_leader,,,,,Ecuador,Manta
+cientifico,C39,Manuel Contreras,manuel.contreras.lopez@gmail.com,,ProplayasC39!,node_leader,,,,,Chile,Valparaiso
+empresarial,E40,Pedro Odriozola,pedro.odriozola@canicas.fr,,ProplayasE40!,node_leader,,,,,España,San Sebastián
+cientifico,C41,Daniel Telles,daniel.hqt@gmail.com,,ProplayasC41!,node_leader,,,,,Brasil,Pontal
+cientifico,C42,Mynor Cordon,mynorcordon@gmail.com,,ProplayasC42!,node_leader,,,,,Guatemala,Guatemala
+empresarial,E43,Alfonso Solis Pimentel,alfonso.solis@gmail.com,,ProplayasE43!,node_leader,Ingeniero Civil,Maestro en Ingeniería,"Monitoreo costero, proyectos de protección y recuperación de playas.",Ingenieria Costera en general.,México,Mérida
+cientifico,C44,Yunior Ramón Velázquez Labrada,yvlabrada@gmail.com,,ProplayasC44!,node_leader,Licenciado en Educación,Doctor en Ciencias Pedagógicas,"Calidad ambiental de playas, Educación ambiental, Manejo Integrado de Zonas Costeras.",Gestión de Playas,Cuba,Santiago
+cientifico,C45,Ruben Cantero,rcantero@cuc.edu.co,,ProplayasC45!,node_leader,,,,,Colombia,Barranquilla
+cientifico,C46,Hugo Hidaglo,integramar@yahoo.es,,ProplayasC46!,node_leader,,,,,Guatemala,Lívingston
+empresarial,E47,Sergio Vargas,arqservar@gmail.com,,ProplayasE47!,node_leader,,,,,Colombia,Coveñas
+cientifico,C48,Juan Pablo Marino,jupamarino@gmail.com,,ProplayasC48!,node_leader,,,,,Colombia,Bogotá
+cientifico,C49,Mario Alberto Palacios Moreno,malpamo21@gmail.com,,ProplayasC49!,node_leader,Biólogo,Magister,Gestión Marítima y Portuaria.,Gestión de Playas,Ecuador,Guayaquil
+cientifico,C50,Susel Alejandre,salejandrej@udg.co.cu,,ProplayasC50!,node_leader,,,,,Cuba,Manzanillo
+cientifico,C51,Maria Elena Gonzalez,elenuzhka@hotmail.com,,ProplayasC51!,node_leader,,,,,México,Puerto Vallarta
+funcion_publica,F52,Raul Sastoque Franco,raulsastoque88@gmail.com,,ProplayasF52!,node_leader,,,,,Colombia,Uribia
+cientifico,C53,Francesco Misticoni,misticoni2@hotmail.com,,ProplayasC53!,node_leader,,,,,Venezuela,Estado de Vargas
+empresarial,E54,Nelson Diaz,nelsondiazmdq@gmail.com,,ProplayasE54!,node_leader,,,,,Argentina,Mar del Plata
+sociedad_civil,A55,Pia Leon Morales,alianzaplayerachile@gmail.com,,ProplayasA55!,node_leader,,,,,Chile,Valparaiso
+cientifico,C56,Maria Lujan Bustos,mlujanbustos@gmail.com,,ProplayasC56!,node_leader,Licenciada en Geografía,Doctora en Geografía,"Manejo costero integrado, ciencia ciudadana, dinámica costera, residuos solidos, manejo participativo.","Morfologia costera, dinamica costera, cambio climatico, gestión participativa, ciencia ciudadana, manejo costero.",Argentina,Bahía Blanca
+cientifico,C57,Claudia Diaz,cdiaz@utb.edu.co,,ProplayasC57!,node_leader,,,,,Colombia,Cartagena
+cientifico,C58,Héctor Alonso Aponte Ubillús,haponte@cientifica.edu.pe,,ProplayasC58!,node_leader,,,,,Perú,Lima
+cientifico,C59,Edgardo E. Diaz-Ferguson,ediaz@coiba.org.pa,,ProplayasC59!,node_leader,,,,,Panamá,Golfo de Chiriqui
+sociedad_civil,A60,Yazmin Guadaluper Rubio Ponce,yaz.rub.17@gmail.com,,ProplayasA60!,node_leader,,,,,México,Yucatán
+sociedad_civil,A61,Paloma Arias Ordiales,palomaguaiano@gmail.com,,ProplayasA61!,node_leader,Gestão Ambiental,Post Graduacion en Ciencias Ambientales en Areas Costeras,"Certificación, Educación Ambiental.",Gestión y Certificación de Playas.,Brasil,São Pedro da Aldeia
+cientifico,C62,Hernando José Bolívar Anillo,hernando.bolivar@unisimon.edu.co,,ProplayasC62!,node_leader,Microbiólogo,Doctor en Recursos Agroalimentarios,Calidad Microbiológica de Playas.,Gestión de Playas,Colombia,Barranquilla
+funcion_publica,F63,Juan Manuel Fernandez,fernandezjuanmf@gmail.com,,ProplayasF63!,node_leader,,,,,Argentina,Necochea
+funcion_publica,F64,Ricardo Alberto D'anunzzio,gestionambiental@tresarroyos.gov.ar,,ProplayasF64!,node_leader,,,,,Argentina,Tres Arroyos
+cientifico,C65,Johanna Poggi Dávila,johannapoggi@gmail.com,,ProplayasC65!,node_leader,,,,,Perú,Lima
+empresarial,E67,Francisco Antonio España Fernández,correspondencia@playaslimpias.mx,,ProplayasE67!,node_leader,,,,,México,Ciudad de México
+cientifico,C68,Violeta Zetzangari Fernández Díaz,violeta.fernandez@uabc.edu.mx,,ProplayasC68!,node_leader,Oceanóloga,Doctora en Ingeniería Civil,"Riesgos naturales costeros, procesos costeros, protección costera.",Impactos de riesgos naturales costeros. Gestión Costera.,México,Baja California
+sociedad_civil,A69,Luz Stella Tisnész Ocampo,luz.tisnes@hotmail.com,,ProplayasA69!,node_leader,,,,,Colombia,Pereira / Coveñas
+empresarial,E70,Manuel Humberto Gomez Proano,gerencia@atlantis-sim.com,,ProplayasE70!,node_leader,,,,,Ecuador,Guayaquil
+cientifico,C71,Áurea E. Rodríguez Santiago,auryro@gmail.com,,ProplayasC71!,node_leader,,,,,Puerto Rico,Añasco
+cientifico,C72,Raquel Dezidério Souto,ivides@ivides.org,,ProplayasC72!,node_leader,,,,,Brasil,Rio de Janeiro
+empresarial,E73,Paulo Alexandre de Sousa Falé,geral@ondascalmas.pt,,ProplayasE73!,node_leader,,,,,Portugal,Madeira
+sociedad_civil,A74,Martha Cecilia Vallejo Luzuriaga,Ciudadania.ActivaXXI@gmail.com,,ProplayasA74!,node_leader,,,,,Ecuador,Guayaquil
+empresarial,E75,Ana María Cadavid,contact@anklaazul.com,,ProplayasE75!,node_leader,,,,,Colombia,Bahía Solano
+empresarial,E76,Luis Cesar Herrera,herrerarondon79@gmail.com,,ProplayasE76!,node_leader,"Técnico Superior Universitario en Tecnología Naval, mención Navegación y Pesca",,"Navegación y pesca, ordenación territorial, ordenación de zonas costeras.",Gestión de Playas,Venezuela,Nueva Esparta
+sociedad_civil,A77,Andrea Dominique Segura Estévez,domise06@gmail.com,,ProplayasA77!,node_leader,Ingeniería Ambiental y Manejo de Riesgos Naturales,,"Contaminación marina, Conservación de tortugas marinas, organización de actividades de difusión y educación ambiental, monitoreos biológicos, atención en varamientos, cvoluntariado y alianzas estratégicas.","Contaminación marina, conservación de especies, varamientos.",Ecuador,Manta
+cientifico,C78,Leonardo Manuel Cuétara Sánchez,leonardocuetara@gmail.com,,ProplayasC78!,node_leader,Licenciado en Economía,PhD en Ciencias Económicas,"Economía, Administración, Matematica aplicada, Turismo.","Modelos de gestión de playa, Certificacion de playas, Gestion sostenible del turismo, Servicios de restauración gastronomica, Gestion de empresas y destinos turístico,  Gestión de modalidades turísticas.",Ecuador,Portoviejo
+sociedad_civil,A79,Maria Patricia Guadarrama Chávez,pguadarrama@ciencias.unam.mx,,ProplayasA79!,node_leader,Biología,Doctora en Ciencias Biológicas,Ecología Vegetal y Restauración Costera.,Gestión de Playas,México,Yucatán
+cientifico,C80,Liceth Carolina Costa Redonde,lcostaredondo@gmail.com,,ProplayasC80!,node_leader,Ingeniería Ambiental,,Residuos sólidos y Microplásticos,Gestión de Playas,Colombia,Riohacha
+sociedad_civil,A82,Daniel Valdés Ojeda,therusso95cu@gmail.com,,ProplayasA82!,node_leader,,,"Veterinaria, Pesca y Ganadería, Música, Marketing Gastronómico.",Gestión de Playas,Cuba,La Habana
+cientifico,C83,María A. Prats,mprats@um.es,,ProplayasC83!,node_leader,Licenciada en Economía,Doctora en Economía,"Turismo sostenible, Economía del turismo, Banderas azules, Impacto económico.",Banderas Azules,España,Murcia
+cientifico,C85,Alexis Santiago Figueredo,alexis.figueredo@uo.edu.cu,,ProplayasC85!,node_leader,,,,,Cuba,Santiago
+cientifico,C87,Elier Alexander Córdova García,eliercordova7@gmail.com,,ProplayasC87!,node_leader,Licenciada en Geografía,Máster en Gestión Ambiental,"Gestión Integral de Playas, Certificación de Playas, Geomorfología Litoral.",Gestión de Playas,Cuba,Holguin
+cientifico,A88,Gustavo Cabrera,gustavocm67@gmail.com,,ProplayasA88!,node_leader,,,,,Honduras,Tegucigalpa
+cientifico,C89,Frank Ocaña,frankocisat@gmail.com,,ProplayasC89!,node_leader,,,,,México,Ciudad del Carmen
+cientifico,C90,Fernanda Navas Moscoso,mariela.navas@uleam.edu.ec ,,ProplayasC90!,node_leader,,,,,Ecuador,Bahía de Caráquez 

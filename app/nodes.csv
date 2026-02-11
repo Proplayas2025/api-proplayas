@@ -1,0 +1,87 @@
+type,code,name,country,city,joined_in
+sociedad_civil,A01,APREC,Brasil,Niterói,2007
+sociedad_civil,A02,RIVIERA MAYA,México,Playa del Carmen,2007
+sociedad_civil,A03,AZUL AMBIENTALISTAS,Venezuela,Maracaibo,2012
+cientifico,C04,PCSM,México,Manzanillo,2012
+cientifico,C05,GIA,Colombia,Cartagena,2011
+cientifico,C06,GIMA,Colombia,Cartagena,2012
+empresarial,E07,SISTEMAS COSTEROS,Colombia,Santa Marta,2008
+empresarial,E08,PG CONSULTANCY,Holanda,Utrecht,2007
+sociedad_civil,A09,BIOMUNICIPIOS,Colombia,Urabá,2008
+cientifico,C10,MCISUR,Uruguay,Maldonado,2012
+cientifico,C11,CATALUNYA,España,Barcelona,2012
+cientifico,C12,ES_UCA,España,Cádiz,2012
+sociedad_civil,A13,ECOPLAYAS,Perú,Lima,2007
+cientifico,C14,COSTATENAS,Cuba,Matanzas,2007
+cientifico,C15,OCEANICOS,Colombia,Medellín,2012
+cientifico,C16,LGCI UNIVALI,Brasil,Itajaí,2012
+cientifico,C17,GFyMA,España,Canarias,2012
+sociedad_civil,A18,PPC CR,Costa Rica,Puntarenas,2012
+cientifico,C19,CICS-NOVA,Portugal,Lisboa,2012
+cientifico,C20,EAFIT,Colombia,Medellín,2012
+cientifico,C21,PDICC-UNCR,Costa Rica,Nicoya,2012
+cientifico,C22,ISAC-UBA,Argentina,Buenos Aires,2012
+cientifico,C23,UMONTERIA,Colombia,Montería,2012
+cientifico,C24,BIKIMI,México,"Manzanillo, Colima",2012
+cientifico,C25,UPR,Puerto Rico,San Juan,2014
+cientifico,C26,UFRGS,Brasil,Porto Alegre,2014
+empresarial,E27,CESAMVC,Cuba,Sagua Cuba,2014
+cientifico,C28,UNMDP,Argentina,Mar del Plata,2014
+cientifico,C29,UNIGUAJIRA,Colombia,Riohacha,2014
+sociedad_civil,A30,LCCK,México,Los Cabos,2014
+cientifico,C31,URABA,Colombia,Turbo,2014
+sociedad_civil,A32,SOU PRAIA,Brasil,Florianópolis,2015
+cientifico,C33,LGM UFRJ,Brasil,Rio de Janeiro,2016
+cientifico,C34,PARANOA,Brasil,Salvador de Bahía,2016
+cientifico,C35,UC UCV,Chile,Santiago,2016
+cientifico,C36,BioCostas-UMIP,Panamá,Panamá,2016
+empresarial,E37,BEACH TROTTERS,España,Torredembarra,2016
+cientifico,C38,ECUADOR-CN,Ecuador,Manta,2017
+cientifico,C39,URCCC,Chile,Valparaiso,2017
+empresarial,E40,CANICAS,España,San Sebastián,2017
+cientifico,C41,PARANA,Brasil,Pontal,2017
+cientifico,C42,SICAUS,Guatemala,Guatemala,2017
+empresarial,E43,AXISIMA,México,Mérida,2018
+cientifico,C44,CEMZOC-UO,Cuba,Santiago,2018
+cientifico,C45,EZOCOS,Colombia,Barranquilla,2018
+cientifico,C46,CARIGUAT,Guatemala,Lívingston,2018
+empresarial,E47,URBAS-GdM,Colombia,Coveñas,2018
+cientifico,C48,UAN,Colombia,Bogotá,2018
+cientifico,C49,ECUPAC,Ecuador,Guayaquil,2018
+cientifico,C50,PUCS,Cuba,Manzanillo,2019
+cientifico,C51,SDC,México,Puerto Vallarta,2019
+funcion_publica,F52,TPAG,Colombia,Uribia,2019
+cientifico,C53,UBVas de Playa,Venezuela,Estado de Vargas,2019
+empresarial,E54,BALNEARIOS MDP,Argentina,Mar del Plata,2019
+sociedad_civil,A55,APCHILE,Chile,Valparaiso,2019
+cientifico,C56,BAHIA BLANCA,Argentina,Bahía Blanca,2019
+cientifico,C57,PSC,Colombia,Cartagena,2019
+cientifico,C58,UCS,Perú,Lima,2020
+cientifico,C59,COIBA-AIP,Panamá,Golfo de Chiriqui,2020
+sociedad_civil,A60,ALTAMARE,México,Yucatán,2020
+sociedad_civil,A61,IEMAR,Brasil,São Pedro da Aldeia,2020
+cientifico,C62,CAPA,Colombia,Barranquilla,2020
+funcion_publica,F63,NECOCHEA,Argentina,Necochea,2020
+funcion_publica,F64,TRES ARROYOS,Argentina,Tres Arroyos,2020
+cientifico,C65,USIL,Perú,Lima,2020
+empresarial,E67,PLMex,México,Ciudad de México,2020
+cientifico,C68,OCEANIC,México,Baja California,2020
+sociedad_civil,A69,LT-San Miguel,Colombia,Pereira / Coveñas,2020
+empresarial,E70,SIM ATLANTIS,Ecuador,Guayaquil,2020
+cientifico,C71,TEPR,Puerto Rico,Añasco,2020
+cientifico,C72,IVIDES,Brasil,Rio de Janeiro,2020
+empresarial,E73,ONDAS CALMAS,Portugal,Madeira,2020
+sociedad_civil,A74,CiuActiva,Ecuador,Guayaquil,2021
+empresarial,E75,Ankla Azul,Colombia,Bahía Solano,2021
+empresarial,E76,Iconoplaya,Venezuela,Nueva Esparta,2021
+sociedad_civil,A77,FUNDACIÓN RACSE,Ecuador,Manta,2023
+cientifico,C78,LATITUD CERO,Ecuador,Portoviejo,2023
+sociedad_civil,A79,RECICLANDO DUNAS,México,Yucatán,2023
+cientifico,C80,RIOHACHA,Colombia,Riohacha,2023
+sociedad_civil,A82,OASIS,Cuba,La Habana,2024
+cientifico,C83,GEMES ( Grupo de estudios del mediterraneo sostenible),España,Murcia,2024
+cientifico,C85,CAYO COCO,Cuba,Santiago,2025
+cientifico,C87,Centro de Investigaciones y Servicios Ambientales  CISAT,Cuba,Holguin,2025
+cientifico,A88,A88,Honduras,Tegucigalpa,2025
+cientifico,C89,GOMEX Universidad Autónoma del Carmen (UNACAR),México,Ciudad del Carmen,2025
+cientifico,C90,Zona norte Manabi,Ecuador,Bahía de Caráquez ,2025

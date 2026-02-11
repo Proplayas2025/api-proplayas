@@ -13,9 +13,8 @@ class ContentType(str, enum.Enum):
     series = "series"
 
 class ContentStatus(str, enum.Enum):
-    draft = "draft"
-    published = "published"
-    archived = "archived"
+    inactive = "inactive"
+    active = "active"
 
 class EventType(str, enum.Enum):
     event = "event"
@@ -44,7 +43,7 @@ class Content(Base):
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     content_type = Column(SQLEnum(ContentType), nullable=False)
-    status = Column(SQLEnum(ContentStatus), nullable=False, default=ContentStatus.draft)
+    status = Column(SQLEnum(ContentStatus), nullable=False, default=ContentStatus.active)
     
     cover_image = Column(String(255), nullable=True)
     cover_image_url = Column(String(500), nullable=True)

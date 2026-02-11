@@ -17,7 +17,9 @@ router = APIRouter(
     tags=["content"]
 )
 
-
+"""
+endpoint para obtener todos los posts en el admin
+"""
 @router.get("/all", response_model=dict)
 async def get_all_content(
     content_type: Optional[ContentType] = None,
@@ -48,7 +50,9 @@ async def get_all_content(
         }
     }
 
-
+"""
+endpoint para obtener todos los posts en la vista publica
+"""
 @router.get("", response_model=dict)
 async def get_content(
     content_type: Optional[ContentType] = None,
@@ -65,11 +69,11 @@ async def get_content(
     if status:
         query = query.filter(Content.status == status)
     else:
-        query = query.filter(Content.status == ContentStatus.published)
+        query = query.filter(Content.status == ContentStatus.active)
     
+    total = query.count()
     offset = (page - 1) * per_page
     content_list = query.offset(offset).limit(per_page).all()
-    total = query.count()
     
     return {
         "status": 200,
@@ -163,13 +167,11 @@ async def toggle_content_status(
     if content.author_id != current_user.id and current_user.role.value not in ["admin", "node_leader"]:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
-    # Cycle through statuses: draft -> published -> archived -> draft
-    if content.status == ContentStatus.draft:
-        content.status = ContentStatus.published
-    elif content.status == ContentStatus.published:
-        content.status = ContentStatus.archived
+    # Cycle through statuses: active || inactive
+    if content.status == ContentStatus.active:
+        content.status = ContentStatus.inactive
     else:
-        content.status = ContentStatus.draft
+        content.status = ContentStatus.active
     
     db.commit()
     db.refresh(content)
