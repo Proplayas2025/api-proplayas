@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
-from typing import List
+from sqlalchemy import or_
+from typing import List, Optional
 from pathlib import Path
 from database import get_db
 from schemas.user import UserResponse, UserListItem, UserUpdate
-from models import User, Node
+from models import User, Node, SocialLink
+from models.social_link import SocialPlatform
 from core.security import get_current_user, get_current_admin
 from core.config import settings
 from core.image import save_optimized_image
@@ -18,13 +20,25 @@ router = APIRouter(
 async def get_users(
     page: int = Query(1, ge=1),
     per_page: int = Query(25, ge=1, le=100),
+    search: Optional[str] = Query(None, max_length=100),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin)
 ):
     offset = (page - 1) * per_page
-    
-    users = db.query(User).offset(offset).limit(per_page).all()
-    total = db.query(User).count()
+    query = db.query(User)
+
+    if search:
+        search_filter = f"%{search}%"
+        query = query.filter(
+            or_(
+                User.name.ilike(search_filter),
+                User.email.ilike(search_filter),
+                User.username.ilike(search_filter),
+            )
+        )
+
+    users = query.offset(offset).limit(per_page).all()
+    total = query.count()
     
     # Enrich with node_code
     result = []
@@ -65,8 +79,29 @@ async def update_current_user_profile(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    for field, value in user_update.dict(exclude_unset=True).items():
+    update_data = user_update.dict(exclude_unset=True, exclude={"social_media"})
+    
+    for field, value in update_data.items():
         setattr(current_user, field, value)
+    
+    # Manejar social_media si se proporciona
+    if user_update.social_media is not None:
+        # Eliminar links existentes
+        db.query(SocialLink).filter(SocialLink.user_id == current_user.id).delete()
+        
+        # Crear nuevos links
+        for link_data in user_update.social_media:
+            try:
+                platform = SocialPlatform(link_data.platform)
+            except ValueError:
+                continue
+            
+            new_link = SocialLink(
+                platform=platform,
+                url=link_data.url,
+                user_id=current_user.id
+            )
+            db.add(new_link)
     
     db.commit()
     db.refresh(current_user)
@@ -125,8 +160,29 @@ async def update_user(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    for field, value in user_update.dict(exclude_unset=True).items():
+    update_data = user_update.dict(exclude_unset=True, exclude={"social_media"})
+    
+    for field, value in update_data.items():
         setattr(user, field, value)
+    
+    # Manejar social_media si se proporciona
+    if user_update.social_media is not None:
+        # Eliminar links existentes
+        db.query(SocialLink).filter(SocialLink.user_id == user.id).delete()
+        
+        # Crear nuevos links
+        for link_data in user_update.social_media:
+            try:
+                platform = SocialPlatform(link_data.platform)
+            except ValueError:
+                continue
+            
+            new_link = SocialLink(
+                platform=platform,
+                url=link_data.url,
+                user_id=user.id
+            )
+            db.add(new_link)
     
     db.commit()
     db.refresh(user)

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from models.content import (
@@ -20,8 +20,7 @@ class ChapterResponse(ChapterBase):
     id: int
     series_id: int
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ContentBase(BaseModel):
     title: str
@@ -72,8 +71,7 @@ class AuthorInfo(BaseModel):
     role: str
     status: str
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ContentResponse(ContentBase):
     id: int
@@ -99,5 +97,4 @@ class ContentResponse(ContentBase):
     author: Optional[AuthorInfo] = None
     chapters: List[ChapterResponse] = []
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

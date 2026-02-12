@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
-from typing import List
+from sqlalchemy import or_
+from typing import List, Optional
 from pathlib import Path
 import shutil
 from database import get_db
 from schemas.node import NodeResponse, NodeCreate, NodeUpdate, NodeWithMembers
 from schemas.user import UserListItem
-from models import Node, User
+from models import Node, User, NodeSocialLink
+from models.social_link import SocialPlatform
 from models.node_member import NodeMember
 from models.user import UserStatus
 from core.security import get_current_user, get_current_admin, get_current_node_leader
@@ -22,12 +24,25 @@ router = APIRouter(
 async def get_nodes(
     page: int = Query(1, ge=1),
     per_page: int = Query(50, ge=1, le=100),
+    search: Optional[str] = Query(None, max_length=100),
     db: Session = Depends(get_db)
 ):
     offset = (page - 1) * per_page
-    
-    nodes = db.query(Node).offset(offset).limit(per_page).all()
-    total = db.query(Node).count()
+    query = db.query(Node)
+
+    if search:
+        search_filter = f"%{search}%"
+        query = query.filter(
+            or_(
+                Node.name.ilike(search_filter),
+                Node.code.ilike(search_filter),
+                Node.country.ilike(search_filter),
+                Node.city.ilike(search_filter),
+            )
+        )
+
+    nodes = query.offset(offset).limit(per_page).all()
+    total = query.count()
     
     return {
         "status": 200,
@@ -133,8 +148,25 @@ async def update_node(
     if current_user.role.value != "admin" and node.leader_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
-    for field, value in node_update.dict(exclude_unset=True).items():
+    # Update node fields excluding social_media
+    update_data = node_update.dict(exclude_unset=True, exclude={"social_media"})
+    for field, value in update_data.items():
         setattr(node, field, value)
+    
+    # Handle social_media separately if provided
+    if node_update.social_media is not None:
+        # Delete existing social links
+        db.query(NodeSocialLink).filter(NodeSocialLink.node_id == node.id).delete()
+        
+        # Create new social links
+        for link_data in node_update.social_media:
+            platform = SocialPlatform(link_data.platform)
+            new_link = NodeSocialLink(
+                platform=platform,
+                url=link_data.url,
+                node_id=node.id
+            )
+            db.add(new_link)
     
     db.commit()
     db.refresh(node)

@@ -82,6 +82,51 @@ cp .env.example .env
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+## Sistema de Correos Electrónicos 📧
+
+El sistema envía invitaciones automáticas por correo cuando se invita a nuevos usuarios.
+
+### Desarrollo (MailHog)
+
+MailHog captura todos los correos localmente para pruebas:
+
+```bash
+# Ya incluido en docker-compose.dev.yml
+# Interfaz web: http://localhost:8025
+# Puerto SMTP: 1025
+
+# Probar envío de correos
+docker-compose -f docker-compose.dev.yml exec api python test_email.py
+```
+
+**Configuración en `.env` para desarrollo:**
+```env
+SMTP_HOST=mailhog
+SMTP_PORT=1025
+SMTP_USER=
+SMTP_PASSWORD=
+FROM_EMAIL=noreply@proplayas.org
+ENVIRONMENT=development
+```
+
+### Producción (Gmail/SMTP Real)
+
+**Configuración en `.env` para producción:**
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=tu-email@gmail.com
+SMTP_PASSWORD=tu-app-password
+FROM_EMAIL=tu-email@gmail.com
+ENVIRONMENT=production
+```
+
+### Documentación Completa
+
+- 🚀 **Guía rápida**: [EMAIL_QUICKSTART.md](./EMAIL_QUICKSTART.md)
+- 📚 **Documentación completa**: [EMAIL_SETUP.md](./EMAIL_SETUP.md)
+- 📝 **Resumen de implementación**: [EMAIL_IMPLEMENTATION_SUMMARY.md](./EMAIL_IMPLEMENTATION_SUMMARY.md)
+
 ## Migraciones de Base de Datos
 
 ```bash

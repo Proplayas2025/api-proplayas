@@ -24,14 +24,19 @@ class Settings(BaseSettings):
         "https://proplayas.org"
     ]
     
-    SMTP_HOST: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
-    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
-    SMTP_USER: str = os.getenv("SMTP_USER", "")
-    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
-    FROM_EMAIL: str = os.getenv("FROM_EMAIL", "")
+    # Email configuration
+    SMTP_HOST: str = os.getenv("SMTP_HOST", "mailhog")  # mailhog service in docker, localhost for local dev
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "1025"))  # 1025 for MailHog, 587 for production
+    SMTP_USER: str = os.getenv("SMTP_USER", "")  # Empty for MailHog
+    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")  # Empty for MailHog
+    FROM_EMAIL: str = os.getenv("FROM_EMAIL", "noreply@proplayas.org")
     FROM_NAME: str = os.getenv("FROM_NAME", "Proplayas")
     
+    # Frontend URL for email links
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    
+    # Environment detection
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")  # development, staging, production
     
     UPLOAD_DIR: str = os.getenv("UPLOAD_DIR", "storage/uploads")
     

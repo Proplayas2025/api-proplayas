@@ -14,6 +14,14 @@ services:
     environment:
       - DATABASE_URL=postgresql://proplayas:proplayas@postgres:5432/proplayas_db
       - DATABASE_ECHO=True
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_USER=
+      - SMTP_PASSWORD=
+      - FROM_EMAIL=noreply@proplayas.org
+      - FROM_NAME=Proplayas
+      - ENVIRONMENT=development
+      - FRONTEND_URL=http://localhost:3000
     volumes:
       - ./app:/app
       - ./storage:/app/storage

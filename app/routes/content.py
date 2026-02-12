@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from typing import Optional
 import os
 import shutil
@@ -23,6 +24,7 @@ endpoint para obtener todos los posts en el admin
 @router.get("/all", response_model=dict)
 async def get_all_content(
     content_type: Optional[ContentType] = None,
+    search: Optional[str] = Query(None, max_length=100),
     page: int = Query(1, ge=1),
     per_page: int = Query(10, ge=1, le=100),
     db: Session = Depends(get_db),
@@ -33,6 +35,15 @@ async def get_all_content(
 
     if content_type:
         query = query.filter(Content.content_type == content_type)
+
+    if search:
+        search_filter = f"%{search}%"
+        query = query.filter(
+            or_(
+                Content.title.ilike(search_filter),
+                Content.description.ilike(search_filter),
+            )
+        )
 
     total = query.count()
     offset = (page - 1) * per_page
@@ -57,6 +68,7 @@ endpoint para obtener todos los posts en la vista publica
 async def get_content(
     content_type: Optional[ContentType] = None,
     status: Optional[ContentStatus] = None,
+    search: Optional[str] = Query(None, max_length=100),
     page: int = Query(1, ge=1),
     per_page: int = Query(10, ge=1, le=100),
     db: Session = Depends(get_db)
@@ -70,6 +82,15 @@ async def get_content(
         query = query.filter(Content.status == status)
     else:
         query = query.filter(Content.status == ContentStatus.active)
+
+    if search:
+        search_filter = f"%{search}%"
+        query = query.filter(
+            or_(
+                Content.title.ilike(search_filter),
+                Content.description.ilike(search_filter),
+            )
+        )
     
     total = query.count()
     offset = (page - 1) * per_page

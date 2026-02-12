@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from schemas.user import UserListItem
 from models.node import NodeType, NodeStatus
@@ -9,8 +9,12 @@ class NodeSocialLink(BaseModel):
     platform: str
     url: str
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+class NodeSocialLinkBase(BaseModel):
+    """Schema base para crear/actualizar redes sociales de nodos"""
+    platform: str
+    url: str
 
 class NodeBase(BaseModel):
     name: str
@@ -39,6 +43,7 @@ class NodeUpdate(BaseModel):
     coordinates: Optional[str] = None
     joined_in: Optional[int] = None
     memorandum: Optional[str] = None
+    social_media: Optional[List[NodeSocialLinkBase]] = None
 
 class LeaderInfo(BaseModel):
     id: int
@@ -47,8 +52,7 @@ class LeaderInfo(BaseModel):
     degree: Optional[str] = None
     postgraduate: Optional[str] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class NodeResponse(NodeBase):
     id: int
@@ -60,11 +64,9 @@ class NodeResponse(NodeBase):
     social_media: List[NodeSocialLink] = []
     leader: Optional[LeaderInfo] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class NodeWithMembers(NodeResponse):
     members: List[UserListItem] = []
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

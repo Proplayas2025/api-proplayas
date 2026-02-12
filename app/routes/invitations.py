@@ -441,19 +441,26 @@ def _create_social_links(db: Session, owner_id: int, social_media: list | None, 
 
 
 # ──────────────────────────────────────────────
-# Listar invitaciones
+# Listar invitaciones pendientes
 # GET /api/invitations
 # ──────────────────────────────────────────────
 @router.get("", response_model=dict)
 async def get_invitations(
+    status: InvitationStatus = InvitationStatus.pending,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_node_leader),
 ):
-    query = db.query(Invitation)
+    query = db.query(Invitation).filter(Invitation.status == status)
 
-    # Node leader solo ve las que él envió
-    if current_user.role.value == "node_leader":
-        query = query.filter(Invitation.invited_by == current_user.id)
+    # Admin ve invitaciones de lideres de nodo
+    if current_user.role.value == "admin":
+        query = query.filter(Invitation.role == UserRole.node_leader)
+    # Node leader solo ve invitaciones de miembros que él envió
+    elif current_user.role.value == "node_leader":
+        query = query.filter(
+            Invitation.invited_by == current_user.id,
+            Invitation.role == UserRole.member
+        )
 
     invitations = query.order_by(Invitation.created_at.desc()).all()
 
@@ -461,4 +468,38 @@ async def get_invitations(
         "status": 200,
         "message": "Invitaciones obtenidas exitosamente",
         "data": [InvitationResponse.from_orm(inv) for inv in invitations],
+    }
+
+
+# ──────────────────────────────────────────────
+# Cancelar/Eliminar invitación
+# DELETE /api/invitations/{invitation_id}
+# ──────────────────────────────────────────────
+@router.delete("/{invitation_id}", response_model=dict)
+async def cancel_invitation(
+    invitation_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_node_leader),
+):
+    invitation = db.query(Invitation).filter(Invitation.id == invitation_id).first()
+    
+    if not invitation:
+        raise HTTPException(status_code=404, detail="Invitación no encontrada")
+    
+    # Verificar permisos
+    if current_user.role.value == "node_leader":
+        if invitation.invited_by != current_user.id:
+            raise HTTPException(status_code=403, detail="No tienes permiso para cancelar esta invitación")
+    
+    # Solo se pueden cancelar invitaciones pendientes
+    if invitation.status != InvitationStatus.pending:
+        raise HTTPException(status_code=400, detail="Solo se pueden cancelar invitaciones pendientes")
+    
+    db.delete(invitation)
+    db.commit()
+    
+    return {
+        "status": 200,
+        "message": "Invitación cancelada exitosamente",
+        "data": None,
     }

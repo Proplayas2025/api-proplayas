@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from models.user import UserRole, UserStatus
@@ -14,8 +14,7 @@ class SocialLink(SocialLinkBase):
     id: int
     user_id: int
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -37,6 +36,7 @@ class UserUpdate(BaseModel):
     research_work: Optional[str] = None
     country: Optional[str] = None
     city: Optional[str] = None
+    social_media: Optional[List[SocialLinkBase]] = None
 
 class UserResponse(UserBase):
     id: int
@@ -53,8 +53,7 @@ class UserResponse(UserBase):
     city: Optional[str] = None
     social_media: List[SocialLink] = []
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserListItem(BaseModel):
     id: int
@@ -65,5 +64,4 @@ class UserListItem(BaseModel):
     node_id: Optional[int] = None
     node_code: Optional[str] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

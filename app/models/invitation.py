@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum as SQLEnum, Text
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from database import Base
 from models.user import UserRole
 import enum
@@ -23,5 +23,5 @@ class Invitation(Base):
     node_id = Column(Integer, ForeignKey("nodes.id"), nullable=True)
     invited_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     
-    created_at = Column(DateTime, default=datetime.utcnow)
-    expires_at = Column(DateTime, default=lambda: datetime.utcnow() + timedelta(days=7))
+    created_at = Column(DateTime(timezone=False), default=datetime.utcnow)
+    expires_at = Column(DateTime(timezone=False), default=lambda: datetime.utcnow() + timedelta(days=7))
