@@ -13,7 +13,7 @@ class EmailService:
         self.smtp_port = settings.SMTP_PORT
         self.smtp_user = settings.SMTP_USER
         self.smtp_password = settings.SMTP_PASSWORD
-        self.from_email = settings.FROM_EMAIL or self.smtp_user or "noreply@proplayas.org"
+        self.from_email = settings.FROM_EMAIL or self.smtp_user or "no-reply@proplayas.org"
         self.from_name = settings.FROM_NAME
         self.frontend_url = settings.FRONTEND_URL
         self.environment = getattr(settings, "ENVIRONMENT", "development")

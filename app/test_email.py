@@ -7,10 +7,8 @@ import asyncio
 import sys
 import os
 
-# Agregar el directorio app al path para poder importar los módulos
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'app'))
-
-from app.core.email import email_service
+# El script ya está en /app/ dentro del contenedor, no necesitamos agregar al path
+from core.email import email_service
 
 async def test_email():
     """Prueba el envío de un correo de invitación de prueba"""
@@ -32,7 +30,7 @@ async def test_email():
     # Datos de prueba
     test_email = input("Ingresa el email de destino para la prueba (o presiona Enter para usar 'test@example.com'): ").strip()
     if not test_email:
-        test_email = "test@example.com"
+        test_email = "miguelagustin182@gmail.com"
     
     print()
     print(f"Enviando correo de prueba a: {test_email}")

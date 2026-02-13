@@ -18,7 +18,7 @@ services:
       - SMTP_PORT=1025
       - SMTP_USER=
       - SMTP_PASSWORD=
-      - FROM_EMAIL=noreply@proplayas.org
+      - FROM_EMAIL=no-reply@proplayas.org
       - FROM_NAME=Proplayas
       - ENVIRONMENT=development
       - FRONTEND_URL=http://localhost:3000
