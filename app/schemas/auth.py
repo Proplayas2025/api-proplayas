@@ -60,3 +60,19 @@ class RegisterNodeMemberRequest(BaseModel):
     country_user: Optional[str] = None
     city_user: Optional[str] = None
     social_media: Optional[List[SocialMediaItem]] = None
+
+
+class RecoverPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class SetNewPasswordRequest(BaseModel):
+    token: str
+    password: str
+    confirm_password: str
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+    confirm_new_password: str

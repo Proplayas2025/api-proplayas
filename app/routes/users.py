@@ -1,3 +1,4 @@
+from base64 import b64decode
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
@@ -5,9 +6,10 @@ from typing import List, Optional
 from pathlib import Path
 from database import get_db
 from schemas.user import UserResponse, UserListItem, UserUpdate
+from schemas.auth import ChangePasswordRequest
 from models import User, Node, SocialLink
 from models.social_link import SocialPlatform
-from core.security import get_current_user, get_current_admin
+from core.security import get_current_user, get_current_admin, verify_password, get_password_hash
 from core.config import settings
 from core.image import save_optimized_image
 
@@ -110,6 +112,56 @@ async def update_current_user_profile(
         "status": 200,
         "message": "Profile updated successfully",
         "data": UserResponse.from_orm(current_user)
+    }
+
+@router.put("/me/change-password", response_model=dict)
+async def change_password(
+    data: ChangePasswordRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Decodificar contraseñas de base64
+    try:
+        current_password = b64decode(data.current_password).decode("utf-8")
+        new_password = b64decode(data.new_password).decode("utf-8")
+        confirm_new_password = b64decode(data.confirm_new_password).decode("utf-8")
+    except Exception:
+        current_password = data.current_password
+        new_password = data.new_password
+        confirm_new_password = data.confirm_new_password
+
+    # Verificar contraseña actual
+    if not verify_password(current_password, current_user.password):
+        return {
+            "status": 400,
+            "message": "La contraseña actual es incorrecta.",
+            "data": None,
+        }
+
+    # Verificar que las nuevas contraseñas coincidan
+    if new_password != confirm_new_password:
+        return {
+            "status": 400,
+            "message": "Las contraseñas nuevas no coinciden.",
+            "data": None,
+        }
+
+    # Validar longitud mínima
+    if len(new_password) < 8:
+        return {
+            "status": 400,
+            "message": "La contraseña debe tener al menos 8 caracteres.",
+            "data": None,
+        }
+
+    # Actualizar contraseña
+    current_user.password = get_password_hash(new_password)
+    db.commit()
+
+    return {
+        "status": 200,
+        "message": "Contraseña actualizada correctamente.",
+        "data": None,
     }
 
 @router.get("/profile/{username}", response_model=dict)

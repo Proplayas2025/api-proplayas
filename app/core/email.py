@@ -239,4 +239,131 @@ Conservación de playas y ecosistemas costeros
 </html>
         """.strip()
 
+    async def send_password_reset_email(self, to_email: str, reset_token: str) -> bool:
+        """
+        Envía un email de recuperación de contraseña con el token.
+        """
+        reset_url = f"{self.frontend_url}/restablecer-contrasena?token={reset_token}"
+
+        subject = "Recuperación de contraseña - Proplayas"
+
+        html_content = self._get_password_reset_template(reset_url=reset_url)
+
+        plain_content = f"""
+Has solicitado restablecer tu contraseña en la Red Proplayas.
+
+Para crear una nueva contraseña, visita el siguiente enlace:
+{reset_url}
+
+Este enlace es válido por 30 minutos.
+
+Si no solicitaste este cambio, puedes ignorar este correo de forma segura.
+
+---
+Red Proplayas
+Conservación de playas y ecosistemas costeros
+        """.strip()
+
+        return await self.send_email(to_email, subject, html_content, plain_content)
+
+    def _get_password_reset_template(self, reset_url: str) -> str:
+        """Plantilla HTML profesional para recuperación de contraseña"""
+
+        return f"""
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperación de contraseña - Proplayas</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%); padding: 40px 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">
+                                Proplayas
+                            </h1>
+                            <p style="color: #e0f2fe; margin: 10px 0 0 0; font-size: 14px;">
+                                Red de Conservación de Playas y Ecosistemas Costeros
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <h2 style="color: #0891b2; margin: 0 0 20px 0; font-size: 24px;">
+                                Recuperación de contraseña
+                            </h2>
+
+                            <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                                Hola,
+                            </p>
+
+                            <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                                Hemos recibido una solicitud para restablecer la contraseña de tu cuenta
+                                en la Red Proplayas. Si realizaste esta solicitud, haz clic en el siguiente
+                                botón para crear una nueva contraseña:
+                            </p>
+
+                            <!-- CTA Button -->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center" style="padding: 20px 0;">
+                                        <a href="{reset_url}"
+                                           style="display: inline-block; background-color: #0891b2; color: #ffffff;
+                                                  text-decoration: none; padding: 15px 40px; border-radius: 6px;
+                                                  font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(8, 145, 178, 0.3);">
+                                            Restablecer contraseña
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="color: #666666; font-size: 14px; line-height: 1.5; margin: 20px 0 0 0;">
+                                O copia y pega este enlace en tu navegador:
+                            </p>
+                            <p style="color: #0891b2; font-size: 14px; word-break: break-all; margin: 5px 0 20px 0;">
+                                {reset_url}
+                            </p>
+
+                            <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px;">
+                                <p style="color: #999999; font-size: 13px; line-height: 1.5; margin: 0;">
+                                    <strong>Este enlace es válido por 30 minutos.</strong>
+                                </p>
+                                <p style="color: #999999; font-size: 13px; line-height: 1.5; margin: 10px 0 0 0;">
+                                    Si no solicitaste este cambio, puedes ignorar este correo de forma segura.
+                                    Tu contraseña no será modificada.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="color: #64748b; font-size: 14px; margin: 0 0 10px 0;">
+                                <strong>Red Proplayas</strong>
+                            </p>
+                            <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 0;">
+                                Conservación de playas y ecosistemas costeros<br>
+                                <a href="{self.frontend_url}" style="color: #0891b2; text-decoration: none;">
+                                    www.proplayas.org
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+        """.strip()
+
 email_service = EmailService()
