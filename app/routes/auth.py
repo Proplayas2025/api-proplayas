@@ -1,5 +1,6 @@
 from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from base64 import b64decode
 from database import get_db
@@ -25,11 +26,14 @@ async def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == credentials.email).first()
 
     if not user or not verify_password(password, user.password):
-        return {
-            "status": 401,
-            "message": "Credenciales incorrectas",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=401,
+            content={
+                "status": 401,
+                "message": "Credenciales incorrectas",
+                "data": None,
+            }
+        )
 
     access_token = create_access_token(
         data={"sub": user.email, "role": user.role.value}
@@ -90,19 +94,25 @@ async def set_new_password(data: SetNewPasswordRequest, db: Session = Depends(ge
     try:
         payload = decode_token(data.token)
     except HTTPException:
-        return {
-            "status": 400,
-            "message": "El enlace de recuperación es inválido o ha expirado.",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=400,
+            content={
+                "status": 400,
+                "message": "El enlace de recuperación es inválido o ha expirado.",
+                "data": None,
+            }
+        )
 
     # Verificar que el token sea de tipo password_reset
     if payload.get("purpose") != "password_reset":
-        return {
-            "status": 400,
-            "message": "Token inválido.",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=400,
+            content={
+                "status": 400,
+                "message": "Token inválido.",
+                "data": None,
+            }
+        )
 
     # Decodificar contraseñas de base64
     try:
@@ -114,30 +124,39 @@ async def set_new_password(data: SetNewPasswordRequest, db: Session = Depends(ge
 
     # Validar que las contraseñas coincidan
     if password != confirm_password:
-        return {
-            "status": 400,
-            "message": "Las contraseñas no coinciden.",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=400,
+            content={
+                "status": 400,
+                "message": "Las contraseñas no coinciden.",
+                "data": None,
+            }
+        )
 
     # Validar longitud mínima
     if len(password) < 8:
-        return {
-            "status": 400,
-            "message": "La contraseña debe tener al menos 8 caracteres.",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=400,
+            content={
+                "status": 400,
+                "message": "La contraseña debe tener al menos 8 caracteres.",
+                "data": None,
+            }
+        )
 
     # Buscar usuario por email del token
     email = payload.get("sub")
     user = db.query(User).filter(User.email == email).first()
 
     if not user:
-        return {
-            "status": 400,
-            "message": "No se pudo encontrar la cuenta asociada.",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=400,
+            content={
+                "status": 400,
+                "message": "No se pudo encontrar la cuenta asociada.",
+                "data": None,
+            }
+        )
 
     # Actualizar contraseña
     user.password = get_password_hash(password)

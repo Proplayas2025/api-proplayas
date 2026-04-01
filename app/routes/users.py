@@ -1,5 +1,6 @@
 from base64 import b64decode
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from typing import List, Optional
@@ -132,27 +133,36 @@ async def change_password(
 
     # Verificar contraseña actual
     if not verify_password(current_password, current_user.password):
-        return {
-            "status": 400,
-            "message": "La contraseña actual es incorrecta.",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=400,
+            content={
+                "status": 400,
+                "message": "La contraseña actual es incorrecta.",
+                "data": None,
+            }
+        )
 
     # Verificar que las nuevas contraseñas coincidan
     if new_password != confirm_new_password:
-        return {
-            "status": 400,
-            "message": "Las contraseñas nuevas no coinciden.",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=400,
+            content={
+                "status": 400,
+                "message": "Las contraseñas nuevas no coinciden.",
+                "data": None,
+            }
+        )
 
     # Validar longitud mínima
     if len(new_password) < 8:
-        return {
-            "status": 400,
-            "message": "La contraseña debe tener al menos 8 caracteres.",
-            "data": None,
-        }
+        return JSONResponse(
+            status_code=400,
+            content={
+                "status": 400,
+                "message": "La contraseña debe tener al menos 8 caracteres.",
+                "data": None,
+            }
+        )
 
     # Actualizar contraseña
     current_user.password = get_password_hash(new_password)
