@@ -1,3 +1,4 @@
+from base64 import b64decode
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
@@ -14,6 +15,13 @@ security = HTTPBearer()
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
+
+def decode_client_password(password: str) -> str:
+    """El frontend envía las contraseñas en base64; si no lo está, se usa tal cual."""
+    try:
+        return b64decode(password).decode("utf-8")
+    except Exception:
+        return password
 
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)

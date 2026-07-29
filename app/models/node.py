@@ -1,23 +1,14 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, Enum as SQLEnum
 from sqlalchemy.orm import relationship
-from database import Base
-import enum
+from models.base import Base
+from enums import NodeType, NodeStatus
 
-class NodeType(str, enum.Enum):
-    sociedad_civil = "sociedad_civil"
-    cientifico = "cientifico"
-    empresarial = "empresarial"
-    funcion_publica = "funcion_publica"
-    individual = "individual"
+__all__ = ["Node", "NodeType", "NodeStatus"]
 
-class NodeStatus(str, enum.Enum):
-    active = "active"
-    inactive = "inactive"
-    pending = "pending"
 
 class Node(Base):
     __tablename__ = "nodes"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
     code = Column(String(50), unique=True, nullable=False, index=True)
@@ -33,9 +24,9 @@ class Node(Base):
     members_count = Column(Integer, default=0)
     memorandum = Column(Text, nullable=True)
     status = Column(SQLEnum(NodeStatus), nullable=False, default=NodeStatus.active)
-    
+
     leader_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    
+
     leader = relationship("User", back_populates="led_node", foreign_keys=[leader_id])
     members = relationship("User", back_populates="node", foreign_keys="User.node_id")
     social_media = relationship("NodeSocialLink", back_populates="node", cascade="all, delete-orphan")

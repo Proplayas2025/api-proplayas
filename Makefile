@@ -1,5 +1,5 @@
 # Makefile para Proplayas API
-.PHONY: help build build-dev dev dev-build dev-down prod prod-build down stop stop-dev logs logs-api logs-db logs-mail db shell-api clean info
+.PHONY: help build build-dev dev dev-build dev-down prod prod-build down stop stop-dev logs logs-api logs-db logs-mail db db-init db-migrate db-upgrade db-downgrade db-current db-history db-stamp db-seed db-clean db-reset shell-api clean info
 
 # Variables
 COMPOSE_FILE = docker-compose.yml
@@ -46,9 +46,17 @@ help:
 	@echo "  make logs-db        - Ver logs de PostgreSQL"
 	@echo "  make logs-mail      - Ver logs de MailHog (dev)"
 	@echo ""
-	@echo "🔧 Utilidades:"
+	@echo "🗄️  Base de datos y migraciones:"
 	@echo "  make db             - Conectar a PostgreSQL"
-	@echo "  make db-init        - Inicializar BD (crear tablas)"
+	@echo "  make db-init        - Inicializar BD (aplica migraciones)"
+	@echo "  make db-migrate MSG='...' - Generar migración desde los modelos"
+	@echo "  make db-upgrade     - Aplicar migraciones pendientes"
+	@echo "  make db-downgrade   - Revertir la última migración"
+	@echo "  make db-current     - Ver revisión actual"
+	@echo "  make db-history     - Ver historial de migraciones"
+	@echo "  make db-stamp       - Marcar BD existente como migrada (sin DDL)"
+	@echo ""
+	@echo "🔧 Utilidades:"
 	@echo "  make db-seed        - Poblar BD con datos de prueba"
 	@echo "  make db-clean       - Limpiar BD (eliminar todo)"
 	@echo "  make db-reset       - Reset completo (clean + init + seed)"
@@ -139,15 +147,40 @@ db:
 
 # Gestión de base de datos
 db-init:
-	@echo "🗄️  Inicializando base de datos (creando tablas)..."
-	@echo "📦 Usando contenedor: $(APP_CONTAINER)"
-	@if ! docker ps --format '{{.Names}}' | grep -q '^$(APP_CONTAINER)$$'; then \
-		echo "❌ Error: Contenedor $(APP_CONTAINER) no está corriendo"; \
-		echo "💡 Inicia el entorno con: make dev"; \
+	@echo "🗄️  Inicializando base de datos (aplicando migraciones)..."
+	@$(MAKE) db-upgrade
+	@echo "✅ Base de datos inicializada"
+
+# Migraciones (Alembic)
+db-migrate:
+	@if [ -z "$(MSG)" ]; then \
+		echo "⚠️  Usa: make db-migrate MSG='descripcion del cambio'"; \
 		exit 1; \
 	fi
-	docker exec -it $(APP_CONTAINER) python init_db.py
-	@echo "✅ Base de datos inicializada"
+	@echo "📝 Generando migración: $(MSG)"
+	docker exec $(APP_CONTAINER) alembic revision --autogenerate -m "$(MSG)"
+	@echo "✅ Migración generada en app/migrations/versions/ (revísala antes de aplicarla)"
+
+db-upgrade:
+	@echo "⬆️  Aplicando migraciones pendientes..."
+	docker exec $(APP_CONTAINER) alembic upgrade head
+	@echo "✅ Migraciones aplicadas"
+
+db-downgrade:
+	@echo "⬇️  Revirtiendo una migración..."
+	docker exec $(APP_CONTAINER) alembic downgrade -1
+
+db-current:
+	@echo "📍 Revisión actual de la base de datos:"
+	docker exec $(APP_CONTAINER) alembic current
+
+db-history:
+	@echo "📜 Historial de migraciones:"
+	docker exec $(APP_CONTAINER) alembic history --verbose
+
+db-stamp:
+	@echo "🏷️  Marcando la BD como migrada hasta head (sin ejecutar DDL)..."
+	docker exec $(APP_CONTAINER) alembic stamp head
 
 db-seed:
 	@echo "🌱 Sembrando datos de prueba..."

@@ -4,32 +4,38 @@ FastAPI backend para el sistema de gestión de nodos de Proplayas.
 
 ## Estructura del Proyecto
 
+La API sigue una arquitectura en capas estricta:
+
+```
+routers → services → repositories → models
+```
+
+- **routers**: capa fina. Validan la entrada, resuelven el usuario autenticado y arman el envelope de respuesta. Sin lógica de negocio.
+- **services**: toda la lógica de negocio (validaciones, permisos, reglas). Reciben repositorios inyectados y devuelven schemas Pydantic, nunca modelos ORM.
+- **repositories**: solo consultas y persistencia. Devuelven modelos ORM o `None`.
+- **models**: SQLAlchemy. Comparten una única `Base` (`database.py`, reexportada en `models/base.py`).
+
 ```
 api-proplayas/
 ├── app/
-│   ├── core/              # Configuración, seguridad, servicios
+│   ├── core/              # Configuración e infraestructura transversal
 │   │   ├── config.py
-│   │   ├── security.py
-│   │   └── email.py
+│   │   ├── security.py    # JWT, hashing, dependencias de autenticación
+│   │   ├── email.py
+│   │   ├── image.py       # Optimización a WebP
+│   │   ├── storage.py     # Guardado de imágenes y documentos
+│   │   └── exceptions.py  # AppError (envelope de error de negocio)
 │   ├── models/            # Modelos SQLAlchemy
-│   │   ├── user.py
-│   │   ├── node.py
-│   │   ├── content.py
-│   │   ├── social_link.py
-│   │   └── invitation.py
-│   ├── schemas/           # Modelos Pydantic
-│   │   ├── user.py
-│   │   ├── auth.py
-│   │   ├── node.py
-│   │   ├── content.py
-│   │   └── invitation.py
-│   ├── routes/            # Endpoints de la API
-│   │   ├── auth.py
-│   │   ├── users.py
-│   │   ├── nodes.py
-│   │   ├── content.py
-│   │   └── invitations.py
-│   ├── database.py        # Configuración de base de datos
+│   ├── schemas/           # Modelos Pydantic (contrato con el frontend)
+│   │   └── common.py      # Page, PageMeta, Result
+│   ├── repositories/      # Acceso a datos (queries)
+│   ├── services/          # Lógica de negocio
+│   ├── routers/           # Endpoints de la API
+│   ├── migrations/        # Migraciones Alembic
+│   ├── dependencies.py    # Inyección de repositorios y servicios
+│   ├── enums.py           # Enums del dominio (fuente única)
+│   ├── database.py        # Engine, sesión y Base
+│   ├── alembic.ini
 │   └── main.py            # Aplicación FastAPI
 ├── storage/               # Archivos subidos
 ├── Dockerfile
@@ -127,15 +133,38 @@ ENVIRONMENT=production
 - 📚 **Documentación completa**: [EMAIL_SETUP.md](./EMAIL_SETUP.md)
 - 📝 **Resumen de implementación**: [EMAIL_IMPLEMENTATION_SUMMARY.md](./EMAIL_IMPLEMENTATION_SUMMARY.md)
 
-## Migraciones de Base de Datos
+## Migraciones de Base de Datos (Alembic)
+
+El esquema se versiona con Alembic. **No se crean tablas con `create_all`**: todo cambio
+en `app/models/` debe pasar por una migración.
 
 ```bash
-# Inicializar tablas (primera vez)
-docker exec -it proplayas-api-dev python init_db.py
+# Aplicar migraciones pendientes (primera vez y en cada despliegue)
+make db-upgrade
 
-# O desde el directorio app en local
-cd app && python init_db.py
+# Generar una migración tras cambiar los modelos (revísala antes de aplicarla)
+make db-migrate MSG="agrega campo x a users"
+
+# Ver estado e historial
+make db-current
+make db-history
+
+# Revertir la última migración
+make db-downgrade
+
+# BD ya existente creada antes de Alembic: marcarla como migrada sin ejecutar DDL
+make db-stamp
 ```
+
+Los archivos generados quedan en `app/migrations/versions/`. Flujo habitual:
+
+1. Modificar el modelo en `app/models/`.
+2. `make db-migrate MSG="..."`.
+3. Revisar el archivo generado (Alembic no resuelve bien FKs circulares ni tipos ENUM).
+4. `make db-upgrade`.
+5. Commitear la migración junto al cambio de modelo.
+
+En producción, ejecutar `make db-upgrade ENV=prod` tras desplegar la nueva imagen.
 
 Ver [COMPATIBILITY.md](COMPATIBILITY.md) para detalles de compatibilidad con el frontend.
 

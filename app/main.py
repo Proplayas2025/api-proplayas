@@ -7,11 +7,14 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 import os
 from core.config import settings
-from routes.auth import router as auth_router
-from routes.users import router as users_router
-from routes.nodes import router as nodes_router
-from routes.content import router as content_router
-from routes.invitations import router as invitations_router
+from core.exceptions import AppError
+from routers import (
+    auth_router,
+    content_router,
+    invitations_router,
+    nodes_router,
+    users_router,
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -48,6 +51,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*", "X-CSRF-Token"],
 )
+
+@app.exception_handler(AppError)
+async def app_error_handler(request: Request, exc: AppError):
+    """Errores de negocio con el envelope estándar de la API."""
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "status": exc.status_code,
+            "message": exc.message,
+            "data": exc.data,
+        }
+    )
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):

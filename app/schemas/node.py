@@ -68,5 +68,25 @@ class NodeResponse(NodeBase):
 
 class NodeWithMembers(NodeResponse):
     members: List[UserListItem] = []
-    
+
     model_config = ConfigDict(from_attributes=True)
+
+class NodeMemberItem(BaseModel):
+    """Miembro de un nodo: datos de la membresía + del usuario asociado."""
+    id: int
+    user_id: int
+    node_id: int
+    member_code: str
+    name: str
+    email: str
+    username: str
+    research_line: Optional[str] = None
+    work_area: Optional[str] = None
+    status: str
+
+class NodeMemberStatus(BaseModel):
+    """Respuesta al alternar el estado de un miembro."""
+    id: int
+    name: str
+    email: str
+    status: str
