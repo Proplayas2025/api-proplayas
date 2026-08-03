@@ -15,18 +15,18 @@ def seed_db():
             name="Admin Proplayas",
             username="admin",
             email="admin@proplayas.org",
-            password=get_password_hash("admin123"),
+            password=get_password_hash("AdminProplayas@5678"),
             role=UserRole.admin,
             status=UserStatus.active,
             about="Administrador principal del sistema",
-            country="Ecuador",
-            city="Quito"
+            country="Mexico",
+            city="Manzanillo"
         )
         db.add(admin)
         db.commit()
 
         print("\n Datos de prueba insertados correctamente:")
-        print("   - 1 Admin (admin@proplayas.org / admin123)")
+        print("   - 1 Admin (admin@proplayas.org / AdminProplayas@5678)")
         
     except Exception as e:
         print(f"❌ Error al sembrar datos: {e}")
