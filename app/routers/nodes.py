@@ -70,6 +70,20 @@ async def create_node(
     }
 
 
+@router.put("/{node_id}/toggle-status", response_model=dict)
+async def toggle_node_status(
+    node_id: int,
+    current_user: User = Depends(get_current_admin),
+    node_service: NodeService = Depends(get_node_service),
+):
+    """Admin: alterna el estado del nodo (active ↔ inactive)."""
+    return {
+        "status": 200,
+        "message": "Node status toggled successfully",
+        "data": node_service.toggle_node_status(current_user, node_id),
+    }
+
+
 @router.put("/{node_id}", response_model=dict)
 async def update_node(
     node_id: int,

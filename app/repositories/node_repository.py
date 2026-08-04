@@ -40,3 +40,15 @@ class NodeRepository(BaseRepository[Node]):
         """Códigos de nodo que empiezan con el prefijo dado (ej. 'A' → A01, A02...)."""
         rows = self.db.query(Node.code).filter(Node.code.like(f"{prefix}%")).all()
         return [code for (code,) in rows]
+
+    def toggle_status(self, node_id: int) -> Node | None:
+        """Alterna el estado del nodo (active ↔ inactive)."""
+        node = self.get(node_id)
+        if not node:
+            return None
+        from enums import NodeStatus
+        node.status = (
+            NodeStatus.inactive if node.status == NodeStatus.active else NodeStatus.active
+        )
+        self.save(node)
+        return node

@@ -117,6 +117,19 @@ class NodeService:
         self.nodes.delete(node)
         return node_id
 
+    def toggle_node_status(self, current_user: User, node_id: int) -> NodeResponse:
+        """Alterna el estado del nodo (active ↔ inactive). Solo admin."""
+        if current_user.role.value != "admin":
+            raise HTTPException(status_code=403, detail="Not enough permissions")
+
+        node = self._require_node(node_id)
+        toggled_node = self.nodes.toggle_status(node_id)
+
+        if not toggled_node:
+            raise HTTPException(status_code=404, detail="Node not found")
+
+        return NodeResponse.model_validate(toggled_node)
+
     # ── Miembros ──
 
     def toggle_member_status(self, current_user: User, member_id: int) -> NodeMemberStatus:
