@@ -82,6 +82,9 @@ build-dev:
 dev:
 	@echo "🚀 Iniciando Proplayas API en modo desarrollo..."
 	docker compose -f $(COMPOSE_DEV_FILE) up -d
+	@echo "⏳ Esperando a que PostgreSQL esté listo..."
+	@bash -c 'until docker exec proplayas-postgres-dev pg_isready -U proplayas > /dev/null 2>&1; do echo -n "."; sleep 1; done; echo ""'
+	@echo "✅ PostgreSQL listo"
 	@echo "✅ API disponible en http://localhost:8080"
 	@echo "📧 MailHog disponible en http://localhost:8025"
 	@echo "📖 Docs disponibles en http://localhost:8080/api/docs"
@@ -98,6 +101,9 @@ dev-down:
 prod:
 	@echo "🚀 Iniciando Proplayas API en producción..."
 	docker compose -f $(COMPOSE_FILE) up -d
+	@echo "⏳ Esperando a que PostgreSQL esté listo..."
+	@bash -c 'until docker exec proplayas-postgres pg_isready -U proplayas > /dev/null 2>&1; do echo -n "."; sleep 1; done; echo ""'
+	@echo "✅ PostgreSQL listo"
 	@echo "✅ API disponible en http://localhost:8080"
 	@echo "📖 Docs disponibles en http://localhost:8080/api/docs"
 
