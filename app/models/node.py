@@ -25,7 +25,7 @@ class Node(Base):
     memorandum = Column(Text, nullable=True)
     status = Column(SQLEnum(NodeStatus), nullable=False, default=NodeStatus.active)
 
-    leader_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    leader_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
 
     leader = relationship("User", back_populates="led_node", foreign_keys=[leader_id])
     members = relationship("User", back_populates="node", foreign_keys="User.node_id")

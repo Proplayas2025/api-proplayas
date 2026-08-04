@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     SMTP_PORT: int = int(os.getenv("SMTP_PORT", "1025"))  # 1025 for MailHog, 587 for production
     SMTP_USER: str = os.getenv("SMTP_USER", "")  # Empty for MailHog
     SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")  # Empty for MailHog
-    FROM_EMAIL: str = os.getenv("FROM_EMAIL", "noreply@proplayas.org")
+    FROM_EMAIL: str = os.getenv("FROM_EMAIL", "no-reply@proplayas.org")
     FROM_NAME: str = os.getenv("FROM_NAME", "Proplayas")
     
     # Frontend URL for email links

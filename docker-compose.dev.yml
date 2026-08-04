@@ -11,17 +11,12 @@ services:
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8080:8000"
+    env_file:
+      - .env
     environment:
       - DATABASE_URL=postgresql://proplayas:proplayas@postgres:5432/proplayas_db
       - DATABASE_ECHO=True
-      - SMTP_HOST=mailhog
-      - SMTP_PORT=1025
-      - SMTP_USER=
-      - SMTP_PASSWORD=
-      - FROM_EMAIL=no-reply@proplayas.org
-      - FROM_NAME=Proplayas
       - ENVIRONMENT=development
-      - FRONTEND_URL=http://localhost:3000
     volumes:
       - ./app:/app
       - ./storage:/app/storage
