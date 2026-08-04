@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: proplayas-api
     ports:
-      - "8080:8000"
+      - "8082:8000"
     env_file:
       - .env
     environment:

@@ -1,5 +1,5 @@
 # Makefile para Proplayas API
-.PHONY: help build build-dev dev dev-build dev-down prod prod-build down stop stop-dev logs logs-api logs-db logs-mail db db-init db-migrate db-upgrade db-downgrade db-current db-history db-stamp db-seed db-clean db-reset shell-api clean info
+.PHONY: help build build-dev dev dev-build dev-down prod prod-build down stop stop-dev logs logs-api logs-db logs-mail db db-init db-migrate db-upgrade db-downgrade db-current db-history db-stamp db-seed db-populate db-clean db-reset shell-api clean info
 
 # Variables
 COMPOSE_FILE = docker-compose.yml
@@ -58,6 +58,7 @@ help:
 	@echo ""
 	@echo "🔧 Utilidades:"
 	@echo "  make db-seed        - Poblar BD con datos de prueba"
+	@echo "  make db-populate    - Poblar BD desde nodes.csv y users.csv"
 	@echo "  make db-clean       - Limpiar BD (eliminar todo)"
 	@echo "  make db-reset       - Reset completo (clean + init + seed)"
 	@echo "  make shell-api      - Shell en contenedor API"
@@ -192,6 +193,17 @@ db-seed:
 	fi
 	docker exec -it $(APP_CONTAINER) python seed.py
 	@echo "✅ Datos de prueba insertados"
+
+db-populate:
+	@echo "📥 Poblando BD desde nodes.csv y users.csv..."
+	@echo "📦 Usando contenedor: $(APP_CONTAINER)"
+	@if ! docker ps --format '{{.Names}}' | grep -q '^$(APP_CONTAINER)$$'; then \
+		echo "❌ Error: Contenedor $(APP_CONTAINER) no está corriendo"; \
+		echo "💡 Inicia el entorno con: make dev"; \
+		exit 1; \
+	fi
+	docker exec -it $(APP_CONTAINER) python load_data_postgres.py
+	@echo "✅ BD poblada con datos de CSVs"
 
 db-clean:
 	@echo "🧹 Limpiando base de datos..."
