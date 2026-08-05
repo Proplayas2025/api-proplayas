@@ -33,7 +33,7 @@ class UserUpdate(BaseModel):
     degree: Optional[str] = None
     postgraduate: Optional[str] = None
     expertise_area: Optional[str] = None
-    research_work: Optional[str] = None
+    research_line: Optional[str] = None
     country: Optional[str] = None
     city: Optional[str] = None
     social_media: Optional[List[SocialLinkBase]] = None
@@ -47,7 +47,7 @@ class UserResponse(UserBase):
     degree: Optional[str] = None
     postgraduate: Optional[str] = None
     expertise_area: Optional[str] = None
-    research_work: Optional[str] = None
+    research_line: Optional[str] = None
     profile_picture: Optional[str] = None
     country: Optional[str] = None
     city: Optional[str] = None

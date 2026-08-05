@@ -247,7 +247,7 @@ class InvitationService:
                 degree=data.get("degree"),
                 postgraduate=data.get("postgraduate"),
                 expertise_area=data.get("expertise_area"),
-                research_work=data.get("research_work"),
+                research_line=data.get("research_line"),
                 country=data.get("country_user"),
                 city=data.get("city_user"),
             )
@@ -310,7 +310,7 @@ class InvitationService:
                 status=UserStatus.active,
                 about=data.get("about_user"),
                 expertise_area=data.get("expertise_area"),
-                research_work=data.get("research_work"),
+                research_line=data.get("research_line"),
                 country=data.get("country_user"),
                 city=data.get("city_user"),
                 node_id=node.id,
@@ -324,8 +324,6 @@ class InvitationService:
                 user_id=new_user.id,
                 node_id=node.id,
                 member_code=member_code,
-                research_line=data.get("research_work"),
-                work_area=data.get("expertise_area"),
             )
         )
 

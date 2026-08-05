@@ -61,8 +61,8 @@ class NodeService:
                 name=user.name,
                 email=user.email,
                 username=user.username,
-                research_line=membership.research_line,
-                work_area=membership.work_area,
+                research_line=user.research_line,
+                work_area=user.expertise_area,
                 status=user.status.value,
             )
             for membership, user in self.memberships.list_with_users(node.id)

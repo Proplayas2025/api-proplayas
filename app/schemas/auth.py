@@ -30,7 +30,7 @@ class RegisterNodeLeaderRequest(BaseModel):
     degree: Optional[str] = None
     postgraduate: Optional[str] = None
     expertise_area: Optional[str] = None
-    research_work: Optional[str] = None
+    research_line: Optional[str] = None
     country_user: Optional[str] = None
     city_user: Optional[str] = None
     social_media: Optional[List[SocialMediaItem]] = None
@@ -56,7 +56,7 @@ class RegisterNodeMemberRequest(BaseModel):
     confirm_password: str
     about_user: Optional[str] = None
     expertise_area: Optional[str] = None
-    research_work: Optional[str] = None
+    research_line: Optional[str] = None
     country_user: Optional[str] = None
     city_user: Optional[str] = None
     social_media: Optional[List[SocialMediaItem]] = None

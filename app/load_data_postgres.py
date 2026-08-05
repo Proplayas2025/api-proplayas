@@ -125,7 +125,7 @@ def load_users(session, nodes_dict):
                 degree=row["degree"].strip() if row.get("degree") and row["degree"].strip() else None,
                 postgraduate=row["postgraduate"].strip() if row.get("postgraduate") and row["postgraduate"].strip() else None,
                 expertise_area=row["expertise_area"].strip() if row.get("expertise_area") and row["expertise_area"].strip() else None,
-                research_work=row["research_work"].strip() if row.get("research_work") and row["research_work"].strip() else None,
+                research_line=row["research_line"].strip() if row.get("research_line") and row["research_line"].strip() else None,
                 country=row["country"].strip() if row.get("country") and row["country"].strip() else None,
                 city=row["city"].strip() if row.get("city") and row["city"].strip() else None,
                 node_id=node.id  # Relacionar usuario con su nodo

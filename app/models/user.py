@@ -21,7 +21,7 @@ class User(Base):
     degree = Column(String(255), nullable=True)
     postgraduate = Column(String(255), nullable=True)
     expertise_area = Column(String(255), nullable=True)
-    research_work = Column(Text, nullable=True)
+    research_line = Column(Text, nullable=True)
     profile_picture = Column(String(255), nullable=True)
     country = Column(String(100), nullable=True)
     city = Column(String(100), nullable=True)

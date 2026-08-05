@@ -1,4 +1,4 @@
-type,code,name,email,username,password,role,degree,postgraduate,expertise_area,research_work,country,city
+type,code,name,email,username,password,role,degree,postgraduate,expertise_area,research_line,country,city
 sociedad_civil,A01,Sergio de Mattos,solmattos1968@gmail.com,,ProplayasA01!,node_leader,,,,,Brasil,Niterói
 sociedad_civil,A02,Gladys Pérez de la Fuente,gpfuente2@gmail.com,,ProplayasA02!,node_leader,Licenciatura en Microbiología,Maestría en Microbiología,"Evaluación, gestión y certiticación de Playas. Manejo integrado de la zona costera.","Evaluación, gestión y certificación de playas. Manejo Integrado de la Zona Costera.",México,Playa del Carmen
 sociedad_civil,A03,Rafael Peñaloza,soymanglar@gmail.com,,ProplayasA03!,node_leader,,,,,Venezuela,Maracaibo
