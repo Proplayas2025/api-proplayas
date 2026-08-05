@@ -54,7 +54,7 @@ help:
 	@echo "  make db-downgrade   - Revertir la última migración"
 	@echo "  make db-current     - Ver revisión actual"
 	@echo "  make db-history     - Ver historial de migraciones"
-	@echo "  make db-stamp       - Marcar BD existente como migrada (sin DDL)"
+	@echo "  make db-stamp [REV=rev_id] - Marcar BD existente como migrada (sin DDL, default: head)"
 	@echo ""
 	@echo "🔧 Utilidades:"
 	@echo "  make db-seed        - Poblar BD con datos de prueba"
@@ -186,8 +186,8 @@ db-history:
 	docker exec $(APP_CONTAINER) alembic history --verbose
 
 db-stamp:
-	@echo "🏷️  Marcando la BD como migrada hasta head (sin ejecutar DDL)..."
-	docker exec $(APP_CONTAINER) alembic stamp head
+	@echo "🏷️  Marcando la BD como migrada en $(if $(REV),$(REV),head) (sin ejecutar DDL)..."
+	docker exec $(APP_CONTAINER) alembic stamp $(if $(REV),$(REV),head)
 
 db-seed:
 	@echo "🌱 Sembrando datos de prueba..."
